@@ -1,5 +1,5 @@
 {'.mean_function.A': array([[0.],
-       [1.]]), '.mean_function.b': array([0.]), '.kernel.kernels[0].variance': array(29.87744287), '.kernel.kernels[0].lengthscales': array(2.94023429), '.kernel.kernels[0].alpha': array(0.00611153), '.kernel.kernels[1].variance': array(0.09804987), '.likelihood.variance': array(1.e-05)}
- Condition Number: 3313.139046830829
+       [1.]]), '.mean_function.b': array([0.]), '.kernel.kernels[0].variance': array(29.87777313), '.kernel.kernels[0].lengthscales': array(2.94026904), '.kernel.kernels[0].alpha': array(0.00611161), '.kernel.kernels[1].variance': array(0.09804991), '.likelihood.variance': array(1.e-05)}
+ Condition Number: 11251.775299152225
  Fit Success?: True
- Log-marginal Likelihood: tf.Tensor(-1207.44963181011, shape=(), dtype=float64)
+ Log-marginal Likelihood: tf.Tensor(-1207.4496318079869, shape=(), dtype=float64)

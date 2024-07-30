@@ -254,10 +254,96 @@ def normalize(inputArray,skScaler=None,method='Standardization',reverse=False):
     return inputArray,skScaler
 
 
-tf.config.run_functions_eagerly(True)
-def bounded_parameter(low, high, initial_value):
-    sigmoid = tfb.Sigmoid(low=tf.cast(low, dtype=tf.float64), high=tf.cast(high, dtype=tf.float64))
-    return gpflow.Parameter(initial_value, transform=sigmoid, dtype=tf.float64)
+
+# Build GPR model function with bounded hyperparameters
+def build_model_with_bounded_params(X, Y, kern, low, high, \
+                                    high_alpha, init_val1, init_val2, init_val3, \
+                                    useWhite, trainLikelihood, anisotropic, typeMeanFunc):
+    """
+    build_model_with_bounded_params(*) creates a GP model object with bounded hyperparameters and initial 
+    values
+
+    Parameters
+    ----------
+    X : numpy array
+        Feature data
+    Y : numpy array
+        Label data
+    low : float
+        lower bound on all hyperparameters
+    high : float
+        upper bound on all hyperparameters except alpha for the RQ kernel
+    high_alpha : float
+        upper bound on alpha hyperparameter for the RQ kernel
+    init_val1 : float
+        initial values for first length scale and alpha parameter
+    init_val2 : float
+        initial values for second length scale for anisotropic kernels
+        for isotropic kernels, only one initial value (init_val1) is used
+    init_val1 : float
+        initial values for variance or scale hyperparameter of kernel 1 (not Whitenoise kernel)
+    
+    Returns
+    -------
+    model : Gpflow model object
+        GP model object with bounded hyperparameters and initial values
+        
+    """
+    
+    low = tf.cast(low, dtype=tf.float64)
+    high = tf.cast(high, dtype=tf.float64)
+    high_alpha = tf.cast(high_alpha, dtype=tf.float64)
+    init_val1 = tf.cast(init_val1, dtype=tf.float64)
+    init_val2 = tf.cast(init_val2, dtype=tf.float64)
+    init_val3 = tf.cast(init_val3, dtype=tf.float64)
+    if anisotropic == True:
+        lsc = gpflow.Parameter([init_val1, init_val2], transform=tfb.Sigmoid(low , high), dtype=tf.float64)
+    else:
+        lsc = gpflow.Parameter(init_val1, transform=tfb.Sigmoid(low , high), dtype=tf.float64)
+    alf = gpflow.Parameter(init_val1, transform=tfb.Sigmoid(low , high_alpha), dtype=tf.float64)
+    var = gpflow.Parameter(init_val3, transform=tfb.Sigmoid(low , high), dtype=tf.float64)
+    if kern == "RQ":
+        kernel_ = gpflow.kernels.RationalQuadratic()
+        kernel_.alpha = alf
+        kernel_.lengthscales = lsc 
+        kernel_.variance = var
+    elif kern == "RBF":
+        kernel_ = gpflow.kernels.RBF()
+        kernel_.lengthscales = lsc
+        kernel_.variance = var
+    elif kern == "Matern12":
+        kernel_ = gpflow.kernels.Matern12()
+        kernel_.lengthscales = lsc
+        kernel_.variance = var
+    elif kern == "Matern32":
+        kernel_ = gpflow.kernels.Matern32()
+        kernel_.lengthscales = lsc
+        kernel_.variance = var
+    elif kern == "Matern52":
+        kernel_ = gpflow.kernels.Matern52()
+        kernel_.lengthscales = lsc
+        kernel_.variance = var
+    if useWhite == True:
+        #white_var = np.array(np.random.uniform(0.05, 1.0))
+        final_kernel = kernel_+gpflow.kernels.White(variance=1.0)
+        
+    if typeMeanFunc == 'Zero':
+        mf = None
+    if typeMeanFunc == 'Constant':
+        #If constant value is selected but no value is given, default to zero mean
+        mf_val = np.array([0,1]).reshape(-1,1)
+        mf = gpflow.functions.Linear(mf_val)
+    if typeMeanFunc == 'Linear':
+        A = np.ones((X.shape[1],1))
+        mf = gpflow.functions.Linear(A)
+    model_ = gpflow.models.GPR(data=(X, Y), kernel=final_kernel, mean_function=mf, noise_variance=10**-5)
+    if typeMeanFunc == 'Constant':
+        gpflow.set_trainable(model_.mean_function.A, False)
+        gpflow.set_trainable(model_.mean_function.b, False)
+    gpflow.utilities.set_trainable(model_.likelihood.variance,trainLikelihood)
+    model = model_
+    return model
+
 
 
 def buildGP(X_Train, Y_Train, gpConfig, code, sc_y_scale, featurenorm, retrain_count):
@@ -268,7 +354,7 @@ def buildGP(X_Train, Y_Train, gpConfig, code, sc_y_scale, featurenorm, retrain_c
     ----------
     X_Train : numpy array (N,K)
         Training features, where N is the number of data points and K is the
-        number of independent features (e.g., sigma profile bins).
+        number of independent features
     Y_Train : numpy array (N,1)
         Training labels (e.g., property of a given molecule).
     gpConfig : dictionary, optional
@@ -292,15 +378,10 @@ def buildGP(X_Train, Y_Train, gpConfig, code, sc_y_scale, featurenorm, retrain_c
                 fixed at 10^-5.
                 The default is True.
         The default is {}.
-    Raises
-    ------
-    UserWarning
-        Warning raised if the optimization (fitting) fails to converge.
-
-    Returns
-    -------
-    model : gpflow.models.gpr.GPR object
-        GP model.
+    sc_y_scale : Scikit learn standard scaler object
+        standard scaler fitted on label training data 
+    retrain_count : int
+        Current GP retrain number
 
     """
     # Unpack gpConfig
@@ -311,78 +392,27 @@ def buildGP(X_Train, Y_Train, gpConfig, code, sc_y_scale, featurenorm, retrain_c
     opt_method=gpConfig.get('opt_method','L-BFGS-B')
     anisotropy=gpConfig.get('anisotropic','False')
     
+    seed_ = int(retrain_count) * 100
+    np.random.seed(seed_)
+    tf.random.set_seed(seed_)
     
     if retrain_count == 0:
-        lengthscale_1 = bounded_parameter(0.00001, 100.0, 1.0)
-        if anisotropy == True:
-            lengthscale_ = np.ones(X_Train.shape[1])*lengthscale_1
-        else:
-            lengthscale_ = lengthscale_1
-        variance_ = bounded_parameter(0.00001, 100.0, 1.0)
-        alpha_ = bounded_parameter(0.0001, 3000, 1.0)
-        white_var = 1.0
+        init_val1 = 1
+        init_val2 = 1
+        init_val3 = 1
     else:
-        seed_ = int(retrain_count) * 100
-        np.random.seed(seed_)
-        tf.random.set_seed(seed_)
-        lengthscale_1 = bounded_parameter(0.00001, 100.0, np.array(np.random.uniform(0.1, 100.0), dtype='float64'))
-        if anisotropy == True:
-            lengthscale_ = np.ones(X_Train.shape[1])*lengthscale_1
-        else:
-            lengthscale_ = lengthscale_1
-        variance_ = bounded_parameter(0.00001, 100.0, np.array(np.random.lognormal(0.0, 1.0), dtype='float64'))
-        alpha_ = bounded_parameter(0.0001, 3000, np.array(np.random.uniform(0.01, 100), dtype='float64'))
-        white_var = bounded_parameter(0.00001, 10, np.array(np.random.uniform(0.05, 10), dtype='float64'))
-        #white_var = 1.0
+        init_val1 = np.array(np.random.uniform(0, 100))
+        init_val2 = np.array(np.random.uniform(0, 100))
+        init_val3 = np.array(np.random.lognormal(0, 1.0))
     
-#         if featurenorm == "Standardization":
-#             exp_95ci = set_white_exp_95CI(code)
-#             white_var = ((exp_95ci/1.96)**2)/(sc_y_scale**2)
-#             white_var = float(white_var)
-        
-    # Select and initialize kernel
-    if kernel=='RBF':
-        gpKernel=gpflow.kernels.SquaredExponential(variance=variance_, lengthscales=lengthscale_)
-    if kernel=='RQ':
-        gpKernel=gpflow.kernels.RationalQuadratic(variance=variance_, lengthscales=lengthscale_, alpha=alpha_)
-    if kernel=='Matern12':
-        gpKernel=gpflow.kernels.Matern12(variance=variance_, lengthscales=lengthscale_)
-    if kernel=='Matern32':
-        gpKernel=gpflow.kernels.Matern32(variance=variance_, lengthscales=lengthscale_)
-    if kernel=='Matern52':
-        gpKernel=gpflow.kernels.Matern52(variance=variance_, lengthscales=lengthscale_)
-    # Add White kernel
-    if useWhiteKernel: 
-        if featurenorm == "Standardization":
-            gpKernel=gpKernel+gpflow.kernels.White(variance = white_var)
-        else:
-            gpKernel=gpKernel+gpflow.kernels.White()
-            
-    # Add Mean function
-    if typeMeanFunc == 'Zero':
-        mf = None
-    if typeMeanFunc == 'Constant':
-        #If constant value is selected but no value is given, default to zero mean
-        mf_val = np.array([0,1]).reshape(-1,1)
-        mf = gpflow.functions.Linear(mf_val)
-    if typeMeanFunc == 'Linear':
-        A = np.ones((X_Train.shape[1],1))
-        mf = gpflow.functions.Linear(A)
-    # Build GP model    
-    model=gpflow.models.GPR((X_Train,Y_Train),gpKernel,mean_function=mf, noise_variance=10**-5)
+    model = build_model_with_bounded_params(X_Train, Y_Train, kernel, 0.00001, 100, 5000, init_val1, \
+                            init_val2, init_val3, useWhiteKernel, trainLikelihood, anisotropy, typeMeanFunc)
     model_pretrain = deepcopy(model)
     # print(gpflow.utilities.print_summary(model))
     condition_number = np.linalg.cond(model.kernel(X_Train))
-    # Select whether the likelihood variance is trained
-    gpflow.utilities.set_trainable(model.likelihood.variance,trainLikelihood)
-    #Set A to be non-trainable for method 4
-    if typeMeanFunc == 'Constant':
-        gpflow.set_trainable(model.mean_function.A, False)
-        gpflow.set_trainable(model.mean_function.b, False)
     # Build optimizer
     optimizer=gpflow.optimizers.Scipy()
     # Fit GP to training data
-
     aux=optimizer.minimize(model.training_loss,
                            model.trainable_variables,
                            options={'maxiter':10**9},
@@ -392,25 +422,16 @@ def buildGP(X_Train, Y_Train, gpConfig, code, sc_y_scale, featurenorm, retrain_c
         opt_success = True
     else:
         opt_success = False
-    # Check convergence
-#     if aux.success==False:
-#         warnings.warn('GP optimizer failed to converge.')
-
-    # print(gpflow.utilities.print_summary(model))
+        
     return model, aux, condition_number, obj_func, opt_success, retrain_count, model_pretrain
 
 
 
 def train_gp(X_Train, Y_Train, gpConfig, code, sc_y_scale, featurenorm, retrain_GP, retrain_count):
     """
-    Trains the GP given training data. Sets self.trained_hyperparams and self.fit_gp_model
+    Trains the GP given training data.
     
-    Notes:
-    ------
-    Sets the following parameters of self
-    self.trained_hyperparams: list, the trained hyperparameters of the GP model
-    self.fit_gp_model: instance of gpflow.models.GPR, the trained GP model
-    self.posterior: instance of gpflow.mean_field.KFGaussian, the posterior of the GP model 
+ 
     """ 
 
     # Train the model multiple times and keep track of the model with the lowest minimum training loss
@@ -429,7 +450,7 @@ def train_gp(X_Train, Y_Train, gpConfig, code, sc_y_scale, featurenorm, retrain_
         print(f"training_loss = {obj_func}")
         print(f"condition_number = {condition_number}")
         retrain_count += 1
-        if best_minimum_loss > obj_func and opt_success==True:
+        if best_minimum_loss > obj_func and opt_success==True: 
             best_minimum_loss = obj_func
             best_model = model
             best_model_pretrain = model_pretrain
@@ -499,23 +520,18 @@ def save_fig(save_path, ext='png', close=True):
         Whether to print information about when and where the image
         has been saved.
     """
-    
     # Extract the directory and filename from the given path
     directory = os.path.split(save_path)[0]
     filename = "%s.%s" % (os.path.split(save_path)[1], ext)
     if directory == '':
         directory = '.'
-
     # If the directory does not exist, create it
     if not os.path.exists(directory):
         os.makedirs(directory)
-
     # The final path to save to
     savepath = os.path.join(directory, filename)
-
     # Actually save the figure
     plt.savefig(savepath, dpi=300, bbox_inches='tight')
-    
     # Close it
     if close:
         plt.close()
@@ -559,16 +575,16 @@ def parity_plot(code, Y_Train, Y_Test, Y_Train_Pred, Y_Test_Pred, Y_Train_CI, Y_
     plt.rcParams['axes.labelsize']=9
     plt.rcParams['xtick.labelsize']=9
     plt.rcParams['ytick.labelsize']=9
-    plt.rcParams['font.size']=6
+    plt.rcParams['font.size']=7.5
     plt.rcParams["savefig.pad_inches"]=0.02
 
-    # Get target variable denominator
+ 
     if code=='Tb':
         varName='T$_{b}$ /K'
     elif code=='Tm':
-        varName='T$_{melt}$ /K'
+        varName='T$_{m}$ /K'
     elif code=='Hvap':
-        varName = "H$_{vap}$ /kJmol$^{-1}$"
+        varName = "$\Delta$H$_{vap}$ /kJmol$^{-1}$"
     elif code == "Vc":
         varName = 'V$_{c}$ /cm$^3$mol$^{-1}$'
     elif code == "Tc":
@@ -592,12 +608,12 @@ def parity_plot(code, Y_Train, Y_Test, Y_Train_Pred, Y_Test_Pred, Y_Train_CI, Y_
         MAE_Train = None
         MAE_Test = None
     
-    MAPD_Train = None
-    MAPD_Test = None
+    MAPE_Train = None
+    MAPE_Test = None
     if disc != True:
         try:
-            MAPD_Train=metrics.mean_absolute_percentage_error(Y_Train,Y_Train_Pred)*100
-            MAPD_Test=metrics.mean_absolute_percentage_error(Y_Test,Y_Test_Pred)*100
+            MAPE_Train=metrics.mean_absolute_percentage_error(Y_Train,Y_Train_Pred)*100
+            MAPE_Test=metrics.mean_absolute_percentage_error(Y_Test,Y_Test_Pred)*100
         except:
             pass
 
@@ -626,34 +642,34 @@ def parity_plot(code, Y_Train, Y_Test, Y_Train_Pred, Y_Test_Pred, Y_Train_CI, Y_
     plt.xlabel('Exp. '+varName + disc_title,weight='bold')
     plt.ylabel('Pred. '+varName + disc_title,weight='bold')
     
-    plt.title(gpConfigs["Name"])
+    #plt.title(gpConfigs["Name"])
     
     if MAE_Train != None:
-        plt.text(0.03,0.93,
+        plt.text(0.97,0.09,
                 'MAE = '+'{:.2f} '.format(MAE_Train)+varName.split()[-1][1:],
-                horizontalalignment='left',
+                horizontalalignment='right',
                 transform=plt.gca().transAxes,c='r')
     if MAE_Test != None:
-        plt.text(0.03,0.87,
+        plt.text(0.97,0.02,
             'MAE = '+'{:.2f} '.format(MAE_Test)+varName.split()[-1][1:],
-            horizontalalignment='left',
+            horizontalalignment='right',
             transform=plt.gca().transAxes,c='b')
-    if MAPD_Train != None:
-        plt.text(0.03,0.81,
-                'MAPD = '+'{:.2f} '.format(MAPD_Train)+"%",
+    if MAPE_Train != None:
+        plt.text(0.03,0.93,
+                'MAPE = '+'{:.2f} '.format(MAPE_Train)+"%",
                 horizontalalignment='left',
                 transform=plt.gca().transAxes,c='r')
-    if MAPD_Test != None:
-        plt.text(0.03,0.75,
-            'MAPD = '+'{:.2f} '.format(MAPD_Test)+"%",
+    if MAPE_Test != None:
+        plt.text(0.03,0.86,
+            'MAPE = '+'{:.2f} '.format(MAPE_Test)+"%",
             horizontalalignment='left',
             transform=plt.gca().transAxes,c='b') 
     if R2_Train != None:
-        plt.text(0.97,0.09,'$R^2$ = '+'{:.2f}'.format(R2_Train),
+        plt.text(0.97,0.23,'$R^2$ = '+'{:.2f}'.format(R2_Train),
                 horizontalalignment='right',
                 transform=plt.gca().transAxes,c='r')
     if R2_Test != None:
-        plt.text(0.97,0.03,'$R^2$ = '+'{:.2f}'.format(R2_Test),
+        plt.text(0.97,0.16,'$R^2$ = '+'{:.2f}'.format(R2_Test),
                 horizontalalignment='right',
                 transform=plt.gca().transAxes,c='b')
     if save_plot == True:
@@ -667,25 +683,36 @@ def parity_plot_final(code, X_data, test_ind, train_ind,
                       Y_Train, Y_Test, Y_Train_Pred, Y_Test_Pred, 
                       gpConfigs, save_plot = False, disc = False):
     """
-    parity_plot() generates a parity plot comparing the experimental and predicted property values
+    parity_plot_final() generates multiple plots comparing the experimental and predicted property values
+    from both group contribution (without GP correction) and with GP correction
 
     Parameters:
     code : string
         Property code
+    X_data : numpy array
+        Complete input feature data set.
+        Training and testing sets unseparated
+    test_ind : numpy array
+        Indices for obtaining testing set from X_data
+    train_ind : numpy array
+        Indices for obtaining training set from X_data
     Y_Train : numpy array
         Training set property values
     Y_Test : numpy array
         Testing set property values
     Y_Train_Pred : numpy array
-        Training set predicted property values
+        Training set GP predicted property values
     Y_Test_Pred : numpy array   
-        Testing set predicted property values
+        Testing set GP predicted property values
     gpConfigs : dictionary   
         Dictionary of GP Configuration
     save_plot : bool
         Whether to save the plot or not
     disc : bool
         Whether to plot the discrepancy of the property or not
+        Note: This is redundant but left in here for intended users who may want to 
+                generate these plots for the discrepancy models
+             In this work, these plots are only made for the final models
     """
     # Pyplot Configuration
     plot_dpi = 300
@@ -706,16 +733,16 @@ def parity_plot_final(code, X_data, test_ind, train_ind,
     plt.rcParams['font.size']=16
     plt.rcParams["savefig.pad_inches"]=0.02
     
-    Y_JR_test = X[test_ind,-1].reshape(-1,1)
-    Y_JR_train = X[train_ind,-1].reshape(-1,1)
+    Y_JR_test = X_data[test_ind,-1].reshape(-1,1)
+    Y_JR_train = X_data[train_ind,-1].reshape(-1,1)
 
     # Get target variable denominator
     if code=='Tb':
         varName='T$_{b}$ /K'
     elif code=='Tm':
-        varName='T$_{melt}$ /K'
+        varName='T$_{m}$ /K'
     elif code=='Hvap':
-        varName = "H$_{vap}$ /kJmol$^{-1}$"
+        varName = "$\Delta$H$_{vap}$ /kJmol$^{-1}$"
     elif code == "Vc":
         varName = 'V$_{c}$ /cm$^3$mol$^{-1}$'
     elif code == "Tc":
@@ -757,21 +784,21 @@ def parity_plot_final(code, X_data, test_ind, train_ind,
     #plt.title(gpConfigs["Name"])
     
     if R2_Train != None:
-        plt.text(0.99,0.23,'GP train $R^2$ = '+'{:.2f}'.format(R2_Train),
-                horizontalalignment='right',
-                transform=plt.gca().transAxes,c='red', fontsize=13)
+        plt.text(0.03,0.93,'GP train $R^2$ = '+'{:.2f}'.format(R2_Train),
+                horizontalalignment='left',
+                transform=plt.gca().transAxes,c='red', fontsize=16)
     if R2_JR_Train != None:
-        plt.text(0.99,0.16,'GC train $R^2$ = '+'{:.2f}'.format(R2_JR_Train),
-                horizontalalignment='right',
-                transform=plt.gca().transAxes,c='green', fontsize=13)
+        plt.text(0.03,0.87,'GC train $R^2$ = '+'{:.2f}'.format(R2_JR_Train),
+                horizontalalignment='left',
+                transform=plt.gca().transAxes,c='green', fontsize=16)
     if R2_Test != None:
         plt.text(0.99,0.09,'GP test $R^2$ = '+'{:.2f}'.format(R2_Test),
                 horizontalalignment='right',
-                transform=plt.gca().transAxes,c='blue', fontsize=13)    
+                transform=plt.gca().transAxes,c='blue', fontsize=16)    
     if R2_JR_Test != None:
         plt.text(0.99,0.02,'GC test $R^2$ = '+'{:.2f}'.format(R2_JR_Test),
                 horizontalalignment='right',
-                transform=plt.gca().transAxes,c='black', fontsize=13)
+                transform=plt.gca().transAxes,c='black', fontsize=16)
     if save_plot == True:
         save_path = "Final_Results/" + code + "/" + gpConfigs['SaveName'] +"/" + disc_save + "Parity_Plot_gcgp"
         save_fig(save_path)
@@ -780,6 +807,17 @@ def parity_plot_final(code, X_data, test_ind, train_ind,
 
         
 def count_outside_95(Y_Train, Y_Test, Y_Train_Pred, Y_Test_Pred, Y_Train_CI, Y_Test_CI):
+    """
+    count_outside_95() finds the number and fraction of predicted data that are outside the predicted 95%
+        confidence intervals from the true values
+
+    Parameters:
+    Y_Train_CI : numpy array
+        Absolute values of the 95% confidence interval on the predictions on training set
+    Y_Test_CI : numpy array
+        Absolute values of the 95% confidence interval on the predictions on testing set
+    
+    """
     out_95_train = []
     out_95_test = []
     for index, value in enumerate(Y_Train):
@@ -830,7 +868,6 @@ from sklearn import preprocessing
 from sklearn.model_selection import train_test_split
 import gpflow
 from matplotlib import pyplot as plt
-#from utils import normalize, gpPredict, buildGP, parity_plot, fit_GP, train_gp, stratifyvector, get_gp_data, init_hyper_parameters, discrepancy_to_property, gpConfig_from_method
 
 # =============================================================================
 # Configuration
@@ -839,7 +876,7 @@ from matplotlib import pyplot as plt
 
 dbPath=""
 # Property Code
-code='Vc' # 'Hvap', 'Vc', 'Pc', 'Tc', 'Tb', 'Tm'
+code='Hvap' # 'Hvap', 'Vc', 'Pc', 'Tc', 'Tb', 'Tm'
 
 # Define normalization methods
 featureNorm='Standardization' # None,Standardization,MinMax
@@ -849,7 +886,7 @@ anisotropic = False
 opt_method = 'L-BFGS-B' #Other Options: L-BFGS-B, BFGS
 useWhiteKernel = True
 trainLikelihood = False
-save_plot = True
+save_plot = True 
 retrain_GP = 10
 method_number = 4
 
@@ -868,7 +905,6 @@ ti=time.time()
 
 # Load data
 db=pd.read_csv(os.path.join(dbPath,code+'_prediction_data.csv'))
-#db=pd.read_csv(os.path.join(dbPath,code+'_prediction_data_correctedOutliers.csv'))
 db=db.dropna()
 X=db.iloc[:,2:-1].copy().to_numpy('float')
 data_names=db.columns.tolist()[2:]
@@ -876,10 +912,7 @@ Y=db.iloc[:,-1].copy().to_numpy('float')
 Y = Y.reshape(-1,1)
 Y_gc = X[:,-1].reshape(-1,1)
 
-#Get X and Y data based on method number
-# X_new, Y_new, Y_gc_new = get_gp_data(X, Y, method_number)
-
-#X_stratify = X[:,-1].reshape(-1,1)
+# Stratification based on features
 X_stratify = X[:,0:]
 indices = np.arange(X.shape[0])
 Y_stratify = np.column_stack((indices, Y))
@@ -896,13 +929,6 @@ test_idx = test_indices
 
 X_Train, Y_Train, Y_gc_Train = get_gp_data(X_Train_0, Y_Train_0[:,-1], method_number)
 X_Test, Y_Test, Y_gc_Test = get_gp_data(X_Test_0, Y_Test_0[:,-1], method_number)
-
-# X_Train = X_new[trn_idx,:]
-# X_Test = X_new[test_idx,:]
-# Y_Train = Y_new[trn_idx,:]
-# Y_Test = Y_new[test_idx,:]
-# Y_gc_Train = Y_gc_new[trn_idx,:]
-# Y_gc_Test = Y_gc_new[test_idx,:]
 
 train_data = np.concatenate((X_Train, Y_Train), axis = 1)
 test_data = np.concatenate((X_Test, Y_Test), axis = 1)
@@ -967,12 +993,12 @@ if labelNorm is not None:
     Y_Train_Var = (skScaler_Y.scale_**2)*Y_Train_Var
     Y_Test_Var = (skScaler_Y.scale_**2)*Y_Test_Var
 
-# #Get data in from such that Y train and Y test are the actual propery predictions
+#Get data in from such that Y train and Y test are the actual propery predictions
 if method_number in [2,3]:
-    Y_Test_Pred_plt = Y_Test_Pred + Y_gc_Test #discrepancy_to_property(method_number, Y_Test_Pred, Y_gc, test_indices)
-    Y_Train_Pred_plt = Y_Train_Pred + Y_gc_Train #discrepancy_to_property(method_number, Y_Train_Pred, Y_gc, train_indices)
-    Y_Test_plt = Y_Test + Y_gc_Test #discrepancy_to_property(method_number, Y_Test, Y_gc, test_indices)
-    Y_Train_plt = Y_Train + Y_gc_Train #discrepancy_to_property(method_number, Y_Train, Y_gc, train_indices)
+    Y_Test_Pred_plt = Y_Test_Pred + Y_gc_Test 
+    Y_Train_Pred_plt = Y_Train_Pred + Y_gc_Train 
+    Y_Test_plt = Y_Test + Y_gc_Test 
+    Y_Train_plt = Y_Train + Y_gc_Train 
 else:
     Y_Test_Pred_plt = Y_Test_Pred  
     Y_Train_Pred_plt = Y_Train_Pred
@@ -1011,7 +1037,6 @@ if method_number != 2 and method_number != 3:
     parity_plot_final(code, X, test_idx, trn_idx, Y_Train_plt, Y_Test_plt, Y_Train_Pred_plt, Y_Test_Pred_plt, 
                   gpConfig, save_plot)
     
-# Print elapsed time
+    
 tf=time.time()
 print('Time elapsed: '+'{:.2f}'.format(tf-ti)+' s')
-

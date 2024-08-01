@@ -1,7 +1,6 @@
 import os
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 import error_funcs as myFxns
 
 # Names of thermophysical properties
@@ -30,11 +29,11 @@ for loopA, property in enumerate(phys_property):
 
         # Save metrics to relevant dictionary
         if set_type == 'train':
-            train_stats[property]   = {'n':     [len(observations)], 
+            train_stats[property]   = {'n':     len(observations), 
                                        'MAE':   mae, 
                                        'RMSE':  rmse}
         elif set_type == 'test':
-            test_stats[property]    = {'n':     [len(observations)], 
+            test_stats[property]    = {'n':     len(observations), 
                                        'MAE':   mae, 
                                        'RMSE':  rmse}
 

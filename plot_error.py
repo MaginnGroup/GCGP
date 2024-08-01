@@ -2,6 +2,9 @@ import numpy as np
 import pandas as pd
 import os
 import matplotlib.pyplot as plt
+import global_plot_settings as rcParams
+
+rcParams.set_plot_settings()
 
 mysalmon = (235/255, 134/255, 100/255)
 myteal = (103/225, 185/255, 155/255)
@@ -36,7 +39,7 @@ plt.bar(x + width/2,   0*test.loc['MAE'],   width,  color = 'w', edgecolor = 'k'
 plt.xticks(x, labels = xlabels)
 plt.xlabel("Thermophysical Property")
 plt.ylabel("Error")
-plt.legend()
+plt.legend(loc = 'upper left')
 plt.savefig(os.path.join('Final_Results', 'error_bar_chart'))
 
 # plt.figure()

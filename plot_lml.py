@@ -22,7 +22,7 @@ width = 0.35
 no_cats = len(xlabels)
 x = np.arange(no_cats)
 
-lml = np.array(lml) * -1
+lml = np.array(lml)
 max_lml = max(lml)
 dist = max_lml - min(lml)
 norm_lml = (max_lml - lml)/dist

@@ -1,0 +1,12 @@
+{'.mean_function.A': array([[-0.13244211],
+       [ 0.8906285 ]]), '.mean_function.b': array([0.05358579]), '.kernel.kernels[0].variance': array(1.48819455), '.kernel.kernels[0].lengthscales': array(3.66710938), '.kernel.kernels[1].variance': array(0.05168668), '.likelihood.variance': array(1.e-05)}
+ Label standard scaler scale parameter: [121.86581141]
+ Condition Number: 283.5164412561076
+ Fit Success?: True
+ Test MAPD: 4.454328725383365
+ Train MAPD: 3.187001684209081
+ Test MAE: 23.04062392961867
+ Train MAE: 17.825267689396718
+ Test R2: 0.8979458220430797
+ Train R2: 0.9516262322502873
+ Log-marginal Likelihood: -14.226214924513556

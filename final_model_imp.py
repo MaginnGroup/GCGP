@@ -61,11 +61,12 @@ def gpConfig_from_method(method_number, code, kernel = 'RBF', anisotropic = Fals
 
     Note:
     method_number is used to define which type of gp model to use
-    1: Y = GP(0, K(Mw, Y_gc))
-    2: Y - Y_gc = GP(0, K(Mw))
-    3: Y - Y_gc = GP(0, K(Mw, Y_gc))
-    4: Y = GP(Y_gc, K(Mw, Y_gc))
-    5: Y = GP(AMw + BY_gc + c, K(Mw, Y_gc))
+    ## CODE                                     ## SI Text
+    1: Y = GP(0, K(Mw, Y_gc))                   ## y ~ GP(yGC, K(yGC, MW))
+    2: Y - Y_gc = GP(0, K(Mw))                  ## y - yGC ~ GP(0, K(MW))
+    3: Y - Y_gc = GP(0, K(Mw, Y_gc))            ## y - yGC ~ GP(0, K(yGC, MW))
+    4: Y = GP(Y_gc, K(Mw, Y_gc))                ## y ~ GP(yGC, K(yGC, MW))
+    5: Y = GP(AMw + BY_gc + c, K(Mw, Y_gc))     ## y ~ GP(linear, K(yGC, MW))
     """
     gpConfig={'kernel': kernel,
            'useWhiteKernel':useWhiteKernel,

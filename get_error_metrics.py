@@ -56,37 +56,3 @@ test_error  = pd.DataFrame(test_stats).to_csv(os.path.join(results, 'test_error'
 
 train_error_jb = pd.DataFrame(train_stats_jb).to_csv(os.path.join(results, 'train_error_jb'))
 test_error_jb  = pd.DataFrame(test_stats_jb).to_csv(os.path.join(results, 'test_error_jb'))
-
-
-# credible_int    = np.loadtxt(os.path.join(results, property, property + '_Y_'+ set_type +'_pred_95CI.txt'))
-
-
-# # creating the bar plot
-# plt.figure()
-# plt.bar(train_df.keys(), train_df.loc['BIC'])
-# plt.xlabel("Property")
-# plt.ylabel("BIC")
-# plt.savefig(os.path.join(results_directory, 'BIC'), dpi = 300)
-
-# plt.figure()
-# plt.bar(train_df.keys(), train_df.loc['MAE'])
-# plt.xlabel("Property")
-# plt.ylabel("MAE")
-# plt.savefig(os.path.join(results_directory, 'MAE'), dpi = 300)
-
-# plt.figure()
-# plt.bar(train_df.keys(), train_df.loc['RMSE'])
-# plt.xlabel("Property")
-# plt.ylabel("RMSE")
-# plt.savefig(os.path.join(results_directory, 'RMSE'), dpi = 300)
-
-
- # # Plot credible interval
-        # plt.figure()
-        # plt.title(set)
-        # plt.errorbar(x = data, y = prediction, yerr=[cred_int, cred_int], ecolor='k', fmt='ko', markerfacecolor = 'w', label = '95% CI')
-        # plt.xlabel('Experimental '+property)
-        # plt.ylabel('Predicted '+property)
-        # plt.plot(data, data, 'r-', label = 'Parity')
-        # plt.legend()
-        # plt.savefig(os.path.join(results_directory, property+'_'+set), dpi = 300)

@@ -14,7 +14,7 @@ myteal   = (103/255, 185/255, 155/255)
 
 # Define labels for the x-axis
 xlabels = [
-    '$H_{vap}$' + '\n[kJ $\cdot$' + ' mol' + '$^{-1}$' + ']',
+    '$\Delta H_{vap}$' + '\n[kJ $\cdot$' + ' mol' + '$^{-1}$' + ']',
     '$P_c$' + ' [bar]',
     '$T_b$' + ' [K]',
     '$T_c$' + ' [K]',
@@ -43,7 +43,7 @@ def plot_error_bars(ax, train_file, test_file, xlabels, width=0.2, ylabel=True):
     for bars in [bars1, bars2, bars3, bars4]:
         for bar in bars:
             yval = bar.get_height()
-            ax.text(bar.get_x() + bar.get_width()/2, yval + 3, "{:.2f}".format(yval), 
+            ax.text(bar.get_x() + bar.get_width()/2, yval + 3, "{:.3f}".format(yval), 
                     ha='center', va='bottom', fontsize=9, rotation=90)
     
     # Set labels and titles
@@ -75,11 +75,11 @@ def create_shared_yaxis_plots(train_file_1, test_file_1, train_file_2, test_file
     
     # Plot the Joback model results on the left axis with legend
     plot_error_bars(ax1, train_file_2, test_file_2, xlabels, width)
-    ax1.text(-0.35, 155, "(a) Joback", fontsize = 14, fontweight = 'bold')
+    ax1.text(-0.35, 155, "(a) JR", fontsize = 14, fontweight = 'bold')
     
     # Plot the model with discrepancy correction on the right axis with the legend
     plot_error_bars(ax2, train_file_1, test_file_1, xlabels, width, ylabel=False)
-    ax2.text(-0.35, 155, "(b) Hybrid", fontsize = 14, fontweight = 'bold')
+    ax2.text(-0.35, 155, "(b) GC-GP", fontsize = 14, fontweight = 'bold')
     
     # Create and add custom legend
     create_custom_legend(ax2)

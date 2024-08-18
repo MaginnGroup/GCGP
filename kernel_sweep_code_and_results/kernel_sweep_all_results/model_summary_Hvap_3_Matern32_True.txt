@@ -1,11 +1,11 @@
-{'.kernel.kernels[0].variance': array(99.99347476), '.kernel.kernels[0].lengthscales': array([38.88559566,  5.52812527]), '.kernel.kernels[1].variance': array(0.3295142), '.likelihood.variance': array(1.e-05)}
+{'.kernel.kernels[0].variance': array(99.99983352), '.kernel.kernels[0].lengthscales': array([38.89700837,  5.5286021 ]), '.kernel.kernels[1].variance': array(0.32952007), '.likelihood.variance': array(1.e-05)}
  Label standard scaler scale parameter: [4.18972172]
- Condition Number: 192.07364482219592
+ Condition Number: 92.14076678474625
  Fit Success?: True
- Test MAPD: 5.877363662320537
- Train MAPD: 4.515725990512659
- Test MAE: 1.90711542169814
- Train MAE: 1.5967265470016396
- Test R2: 0.8490870297826485
- Train R2: 0.9226601814908758
- Log-marginal Likelihood: -378.0184019220892
+ Test MAPD: 5.877316621491398
+ Train MAPD: 4.51576326724798
+ Test MAE: 1.9071049640792097
+ Train MAE: 1.5967384579324915
+ Test R2: 0.8490861227787387
+ Train R2: 0.9226588269386468
+ Log-marginal Likelihood: -378.018382240208

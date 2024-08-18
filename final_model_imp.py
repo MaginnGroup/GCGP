@@ -1,3 +1,12 @@
+# -*- coding: utf-8 -*-
+"""
+Script to train a GP on physicochemical properties.
+
+Last edit: 2024-08-17
+Contributors: Dinis Abranches, Montana Carlozo, Barnabas Agbodekhe
+"""
+
+
 import os
 import warnings
 import time
@@ -14,6 +23,7 @@ from gpflow.utilities import print_summary, set_trainable, deepcopy
 import tensorflow as tf
 from tensorflow_probability import bijectors as tfb
 from matplotlib import pyplot as plt
+
 
 # =============================================================================
 # Auxiliary Functions
@@ -81,19 +91,15 @@ def gpConfig_from_method(method_number, code, kernel = 'RBF', anisotropic = Fals
         gpConfig['Name']='y_exp = y_GC + GP(0, K(x1))'
         gpConfig['SaveName']='model_2'
     if method_number == 3:
-        gpConfig['mean_function']='Zero'
-        gpConfig['Name']='y_exp = y_GC + GP(0, K(x1,x2))'
-        gpConfig['SaveName']='model_3'
-    if method_number == 4:
         gpConfig['mean_function']='Constant'
         gpConfig['Name']='y_exp = GP(y_GC, K(x1,x2))'
-        gpConfig['SaveName']='model_4'
-    if method_number == 5:
+        gpConfig['SaveName']='model_3'
+    if method_number == 4:
         gpConfig['mean_function']='Linear'
         gpConfig['Name']='y_exp = GP(B@X, K(x1,x2))'
-        gpConfig['SaveName']='model_5'
+        gpConfig['SaveName']='model_4'
     else: 
-        if method_number not in [1 , 2, 3, 4, 5]:
+        if method_number not in [1 , 2, 3, 4]:
             raise ValueError('invalid method number input')   
     return gpConfig
 
@@ -122,13 +128,14 @@ def get_gp_data(X, Y, method_number):
         X_gp = X[:,0].reshape(-1,1)
     else:
         X_gp = X
-    if method_number in [2,3]:
-        Y_gp = Y.flatten() - X[:,1]
+    if method_number == 2:
+        Y_gp = Y - X[:,1]
     else:
         Y_gp = Y
     Y_gp = Y_gp.reshape(-1,1)
     Y_gc = X[:,1].reshape(-1,1)
     return X_gp, Y_gp, Y_gc
+
 
 def discrepancy_to_property(method_number, y_pred, y_gc, idx):
     """
@@ -147,7 +154,7 @@ def discrepancy_to_property(method_number, y_pred, y_gc, idx):
     y_prop : numpy array
         Predicted property value
     """
-    if method_number in [2,3]:
+    if method_number == 2:
         y_prop = y_pred + y_gc[idx.flatten(),:]
     else:
         y_prop = y_pred
@@ -226,30 +233,34 @@ def normalize(inputArray,skScaler=None,method='Standardization',reverse=False):
         warnings.warn('Input to normalize() was of shape (N,). It was assumed'\
                       +' to be a column array and converted to a (N,1) shape.')
     # If skScaler is None, train for the first time
-    if skScaler is None:
-        # Check method
-        if method=='Standardization' or method=='MinMax': aux=inputArray
-        elif method=='LogStand': aux=np.log(inputArray)
-        elif method=='Log+bStand': aux=np.log(inputArray+10**-3)
-        else: raise ValueError('Could not recognize method in normalize().')
-        if method!='MinMax':
-            skScaler=preprocessing.StandardScaler().fit(aux)
-        else:
-            skScaler=preprocessing.MinMaxScaler().fit(aux)
-    # Do main operation (normalize or unnormalize)
-    if reverse:
-        # Rescale the data back to its original distribution
-        inputArray=skScaler.inverse_transform(inputArray)
-        # Check method
-        if method=='LogStand': inputArray=np.exp(inputArray)
-        elif method=='Log+bStand': inputArray=np.exp(inputArray)-10**-3
-    elif not reverse:
-        # Check method
-        if method=='Standardization' or method=='MinMax': aux=inputArray
-        elif method=='LogStand': aux=np.log(inputArray)
-        elif method=='Log+bStand': aux=np.log(inputArray+10**-3)
-        else: raise ValueError('Could not recognize method in normalize().')
-        inputArray=skScaler.transform(aux)
+    if method == 'None':
+        inputArray=inputArray
+        skScaler = None
+    else:
+        if skScaler is None:
+            # Check method
+            if method=='Standardization' or method=='MinMax': aux=inputArray
+            elif method=='LogStand': aux=np.log(inputArray)
+            elif method=='Log+bStand': aux=np.log(inputArray+10**-3)
+            else: raise ValueError('Could not recognize method in normalize().')
+            if method!='MinMax':
+                skScaler=preprocessing.StandardScaler().fit(aux)
+            else:
+                skScaler=preprocessing.MinMaxScaler().fit(aux)
+        # Do main operation (normalize or unnormalize)
+        if reverse:
+            # Rescale the data back to its original distribution
+            inputArray=skScaler.inverse_transform(inputArray)
+            # Check method
+            if method=='LogStand': inputArray=np.exp(inputArray)
+            elif method=='Log+bStand': inputArray=np.exp(inputArray)-10**-3
+        elif not reverse:
+            # Check method
+            if method=='Standardization' or method=='MinMax': aux=inputArray
+            elif method=='LogStand': aux=np.log(inputArray)
+            elif method=='Log+bStand': aux=np.log(inputArray+10**-3)
+            else: raise ValueError('Could not recognize method in normalize().')
+            inputArray=skScaler.transform(aux)
     # Return
     return inputArray,skScaler
 
@@ -326,6 +337,8 @@ def build_model_with_bounded_params(X, Y, kern, low, high, \
     if useWhite == True:
         #white_var = np.array(np.random.uniform(0.05, 1.0))
         final_kernel = kernel_+gpflow.kernels.White(variance=1.0)
+    else:
+        final_kernel = kernel_
         
     if typeMeanFunc == 'Zero':
         mf = None
@@ -346,7 +359,7 @@ def build_model_with_bounded_params(X, Y, kern, low, high, \
 
 
 
-def buildGP(X_Train, Y_Train, gpConfig, code, sc_y_scale, featurenorm, retrain_count):
+def buildGP(X_Train, Y_Train, gpConfig, code, featurenorm, retrain_count):
     """
     buildGP() builds and fits a GP model using the training data provided.
 
@@ -427,7 +440,7 @@ def buildGP(X_Train, Y_Train, gpConfig, code, sc_y_scale, featurenorm, retrain_c
 
 
 
-def train_gp(X_Train, Y_Train, gpConfig, code, sc_y_scale, featurenorm, retrain_GP, retrain_count):
+def train_gp(X_Train, Y_Train, gpConfig, code, sc_y, featurenorm, retrain_GP, retrain_count):
     """
     Trains the GP given training data.
     
@@ -446,7 +459,7 @@ def train_gp(X_Train, Y_Train, gpConfig, code, sc_y_scale, featurenorm, retrain_
     retrain_count = retrain_count
     for i in range(retrain_GP):
         model, aux, condition_number, obj_func, opt_success, retrain_count, model_pretrain = \
-            buildGP(X_Train, Y_Train, gpConfig, code, sc_y_scale, featurenorm, retrain_count)
+            buildGP(X_Train, Y_Train, gpConfig, code, featurenorm, retrain_count)
         print(f"training_loss = {obj_func}")
         print(f"condition_number = {condition_number}")
         retrain_count += 1
@@ -461,13 +474,18 @@ def train_gp(X_Train, Y_Train, gpConfig, code, sc_y_scale, featurenorm, retrain_
     
     #Put hyperparameters in a list
     trained_hyperparams = gpflow.utilities.read_values(best_model)
+    
+    if sc_y != None:
+        sc_y_scale = sc_y.scale_
+    else:
+        sc_y_scale = None
 
     return best_model,best_minimum_loss,best_model_success,best_condition_num,trained_hyperparams,best_model_pretrain,sc_y_scale
 
 
 def gpPredict(model,X):
     """
-    gpPredict() returns the prediction and standard deviation of the GP model
+    gpPredict() returns the prediction and variance of the GP model
     on the X data provided.
 
     Parameters
@@ -493,317 +511,11 @@ def gpPredict(model,X):
     GP_Var=GP_Var.numpy()
     # Prepare outputs
     Y=GP_Mean
-    STD=np.sqrt(GP_Var)
+    VAR=GP_Var
     # Output
-    return Y,STD
+    return Y,VAR
 
-# =============================================================================
-# Plots
-# =============================================================================
-def save_fig(save_path, ext='png', close=True):                
-    """Save a figure from pyplot.
-    Parameters
-    ----------
-    path : string
-        The path (and filename, without the extension) to save the
-        figure to.
-    ext : string (default='png')
-        The file extension. This must be supported by the active
-        matplotlib backend (see matplotlib.backends module).  Most
-        backends support 'png', 'pdf', 'ps', 'eps', and 'svg'.
-    close : boolean (default=True)
-        Whether to close the figure after saving.  If you want to save
-        the figure multiple times (e.g., to multiple formats), you
-        should NOT close it in between saves or you will have to
-        re-plot it.
-    verbose : boolean (default=True)
-        Whether to print information about when and where the image
-        has been saved.
-    """
-    # Extract the directory and filename from the given path
-    directory = os.path.split(save_path)[0]
-    filename = "%s.%s" % (os.path.split(save_path)[1], ext)
-    if directory == '':
-        directory = '.'
-    # If the directory does not exist, create it
-    if not os.path.exists(directory):
-        os.makedirs(directory)
-    # The final path to save to
-    savepath = os.path.join(directory, filename)
-    # Actually save the figure
-    plt.savefig(savepath, dpi=300, bbox_inches='tight')
-    # Close it
-    if close:
-        plt.close()
 
-        
-        
-def parity_plot(code, Y_Train, Y_Test, Y_Train_Pred, Y_Test_Pred, Y_Train_CI, Y_Test_CI, gpConfigs, save_plot = False, disc = False):
-    """
-    parity_plot() generates a parity plot comparing the experimental and predicted property values
-
-    Parameters:
-    code : string
-        Property code
-    Y_Train : numpy array
-        Training set property values
-    Y_Test : numpy array
-        Testing set property values
-    Y_Train_Pred : numpy array
-        Training set predicted property values
-    Y_Test_Pred : numpy array   
-        Testing set predicted property values
-    gpConfigs : dictionary   
-        Dictionary of GP Configuration
-    save_plot : bool
-        Whether to save the plot or not
-    disc : bool
-        Whether to plot the discrepancy of the property or not
-    """
-    # Pyplot Configuration
-    plt.rcParams['figure.dpi']=300
-    plt.rcParams['savefig.dpi']=300
-    plt.rcParams['text.usetex']=False
-    plt.rcParams['font.family']='serif'
-    # plt.rcParams['font.serif']='Times New Roman'
-    plt.rcParams['font.weight']='bold'
-    plt.rcParams['mathtext.rm']='serif'
-    plt.rcParams['mathtext.it']='serif:italic'
-    plt.rcParams['mathtext.bf']='serif:bold'
-    plt.rcParams['mathtext.fontset']='custom'
-    plt.rcParams['axes.titlesize']=9
-    plt.rcParams['axes.labelsize']=9
-    plt.rcParams['xtick.labelsize']=9
-    plt.rcParams['ytick.labelsize']=9
-    plt.rcParams['font.size']=7.5
-    plt.rcParams["savefig.pad_inches"]=0.02
-
- 
-    if code=='Tb':
-        varName='T$_{b}$ /K'
-    elif code=='Tm':
-        varName='T$_{m}$ /K'
-    elif code=='Hvap':
-        varName = "$\Delta$H$_{vap}$ /kJmol$^{-1}$"
-    elif code == "Vc":
-        varName = 'V$_{c}$ /cm$^3$mol$^{-1}$'
-    elif code == "Tc":
-        varName = 'T$_{c}$ /K'
-    elif code == "Pc":
-        varName = 'P$_{c}$ /bar'
-    else:
-        varName = 'Property'
-    # Predictions Scatter Plot
-    # Compute metrics
-    try:
-        R2_Train=metrics.r2_score(Y_Train,Y_Train_Pred)
-        R2_Test=metrics.r2_score(Y_Test,Y_Test_Pred)
-    except:
-        R2_Train = None
-        R2_Test = None
-    try:
-        MAE_Train=metrics.mean_absolute_error(Y_Train,Y_Train_Pred)
-        MAE_Test=metrics.mean_absolute_error(Y_Test,Y_Test_Pred)
-    except:
-        MAE_Train = None
-        MAE_Test = None
-    
-    MAPE_Train = None
-    MAPE_Test = None
-    if disc != True:
-        try:
-            MAPE_Train=metrics.mean_absolute_percentage_error(Y_Train,Y_Train_Pred)*100
-            MAPE_Test=metrics.mean_absolute_percentage_error(Y_Test,Y_Test_Pred)*100
-        except:
-            pass
-
-    # Plot
-    plt.figure(figsize=(2.3,2))
-    plt.plot(Y_Train,Y_Train_Pred,'ow',markersize=3,  mec ='r', mew=0.5, zorder = 2)
-    train_err = plt.errorbar(Y_Train.flatten(), Y_Train_Pred.flatten(), yerr = Y_Train_CI.flatten(), 
-                 ls='none', color = 'red', linewidth=0.5, zorder = 1, alpha = 0.5) 
-    (plotline, _, _) = train_err
-    train_err[-1][0].set_linestyle('--')
-    plotline.set_markerfacecolor('none')
-    plt.plot(Y_Test,Y_Test_Pred,'^w',markersize=3, mec ='b', mew= 0.5, zorder = 4)
-    test_err = plt.errorbar(Y_Test.flatten(), Y_Test_Pred.flatten(), yerr = Y_Test_CI.flatten(), 
-                 ls='none', color = 'b', linewidth=0.5, zorder = 3, alpha = 0.5) 
-    (plotline2, _, _) = test_err
-    test_err[-1][0].set_linestyle('--')
-    plotline2.set_markerfacecolor('none')
-    
-    lims=[np.min([plt.gca().get_xlim(),plt.gca().get_ylim()]),
-        np.max([plt.gca().get_xlim(),plt.gca().get_ylim()])]
-    plt.axline((lims[0],lims[0]),(lims[1],lims[1]),color='k',
-            linestyle='--',linewidth=1)
-
-    disc_save = ""
-    disc_title = ""
-    plt.xlabel('Exp. '+varName + disc_title,weight='bold')
-    plt.ylabel('Pred. '+varName + disc_title,weight='bold')
-    
-    #plt.title(gpConfigs["Name"])
-    
-    if MAE_Train != None:
-        plt.text(0.97,0.09,
-                'MAE = '+'{:.2f} '.format(MAE_Train)+varName.split()[-1][1:],
-                horizontalalignment='right',
-                transform=plt.gca().transAxes,c='r')
-    if MAE_Test != None:
-        plt.text(0.97,0.02,
-            'MAE = '+'{:.2f} '.format(MAE_Test)+varName.split()[-1][1:],
-            horizontalalignment='right',
-            transform=plt.gca().transAxes,c='b')
-    if MAPE_Train != None:
-        plt.text(0.03,0.93,
-                'MAPE = '+'{:.2f} '.format(MAPE_Train)+"%",
-                horizontalalignment='left',
-                transform=plt.gca().transAxes,c='r')
-    if MAPE_Test != None:
-        plt.text(0.03,0.86,
-            'MAPE = '+'{:.2f} '.format(MAPE_Test)+"%",
-            horizontalalignment='left',
-            transform=plt.gca().transAxes,c='b') 
-    if R2_Train != None:
-        plt.text(0.97,0.23,'$R^2$ = '+'{:.2f}'.format(R2_Train),
-                horizontalalignment='right',
-                transform=plt.gca().transAxes,c='r')
-    if R2_Test != None:
-        plt.text(0.97,0.16,'$R^2$ = '+'{:.2f}'.format(R2_Test),
-                horizontalalignment='right',
-                transform=plt.gca().transAxes,c='b')
-    if save_plot == True:
-        save_path = "Final_Results/" + code + "/" + gpConfigs['SaveName'] +"/" + disc_save + "Parity_Plot"
-        save_fig(save_path)
-    else:
-        plt.show()
-                    
-    
-def parity_plot_final(code, X_data, test_ind, train_ind,
-                      Y_Train, Y_Test, Y_Train_Pred, Y_Test_Pred, 
-                      gpConfigs, save_plot = False, disc = False):
-    """
-    parity_plot_final() generates multiple plots comparing the experimental and predicted property values
-    from both group contribution (without GP correction) and with GP correction
-
-    Parameters:
-    code : string
-        Property code
-    X_data : numpy array
-        Complete input feature data set.
-        Training and testing sets unseparated
-    test_ind : numpy array
-        Indices for obtaining testing set from X_data
-    train_ind : numpy array
-        Indices for obtaining training set from X_data
-    Y_Train : numpy array
-        Training set property values
-    Y_Test : numpy array
-        Testing set property values
-    Y_Train_Pred : numpy array
-        Training set GP predicted property values
-    Y_Test_Pred : numpy array   
-        Testing set GP predicted property values
-    gpConfigs : dictionary   
-        Dictionary of GP Configuration
-    save_plot : bool
-        Whether to save the plot or not
-    disc : bool
-        Whether to plot the discrepancy of the property or not
-        Note: This is redundant but left in here for intended users who may want to 
-                generate these plots for the discrepancy models
-             In this work, these plots are only made for the final models
-    """
-    # Pyplot Configuration
-    plot_dpi = 300
-    plt.rcParams['figure.dpi']=plot_dpi
-    plt.rcParams['savefig.dpi']=plot_dpi
-    plt.rcParams['text.usetex']=False
-    plt.rcParams['font.family']='serif'
-    # plt.rcParams['font.serif']='Times New Roman'
-    plt.rcParams['font.weight']='bold'
-    plt.rcParams['mathtext.rm']='serif'
-    plt.rcParams['mathtext.it']='serif:italic'
-    plt.rcParams['mathtext.bf']='serif:bold'
-    plt.rcParams['mathtext.fontset']='custom'
-    plt.rcParams['axes.titlesize']=16
-    plt.rcParams['axes.labelsize']=16
-    plt.rcParams['xtick.labelsize']=16
-    plt.rcParams['ytick.labelsize']=16
-    plt.rcParams['font.size']=16
-    plt.rcParams["savefig.pad_inches"]=0.02
-    
-    Y_JR_test = X_data[test_ind,-1].reshape(-1,1)
-    Y_JR_train = X_data[train_ind,-1].reshape(-1,1)
-
-    # Get target variable denominator
-    if code=='Tb':
-        varName='T$_{b}$ /K'
-    elif code=='Tm':
-        varName='T$_{m}$ /K'
-    elif code=='Hvap':
-        varName = "$\Delta$H$_{vap}$ /kJmol$^{-1}$"
-    elif code == "Vc":
-        varName = 'V$_{c}$ /cm$^3$mol$^{-1}$'
-    elif code == "Tc":
-        varName = 'T$_{c}$ /K'
-    elif code == "Pc":
-        varName = 'P$_{c}$ /bar'
-    else:
-        varName = 'Property'
-    try:
-        R2_Train=metrics.r2_score(Y_Train, Y_Train_Pred)
-        R2_JR_Train=metrics.r2_score(Y_Train, Y_JR_train)
-        R2_Test=metrics.r2_score(Y_Test, Y_Test_Pred)
-        R2_JR_Test=metrics.r2_score(Y_Test, Y_JR_test)
-    except:
-        R2_Train = None
-        R2_JR_Train = None
-        R2_Test = None
-        R2_JR_Test = None
-    
-    plt.scatter(Y_Train_Pred, Y_Train, marker='o', color='red', alpha=0.4)
-    plt.scatter(Y_JR_train, Y_Train, marker='+', color='green', alpha=0.6)
-    plt.scatter(Y_Test_Pred, Y_Test, marker='^', color='blue', alpha=0.4)
-    plt.scatter(Y_JR_test, Y_Test, marker='x', color='black', alpha=0.4)
-    
-    
-    lims=[np.min([plt.gca().get_xlim(),plt.gca().get_ylim()]),
-        np.max([plt.gca().get_xlim(),plt.gca().get_ylim()])]
-    plt.axline((lims[0],lims[0]),(lims[1],lims[1]),color='k',
-            linestyle='--',linewidth=1)
-    if disc == True:
-        disc_title = " Discrepancy"
-        disc_save = "Discrepancy_"
-    else:
-        disc_save = ""
-        disc_title = ""
-    plt.xlabel('Pred. '+varName + disc_title,weight='bold')
-    plt.ylabel('Exp. '+varName + disc_title,weight='bold')
-    
-    #plt.title(gpConfigs["Name"])
-    
-    if R2_Train != None:
-        plt.text(0.03,0.93,'GP train $R^2$ = '+'{:.2f}'.format(R2_Train),
-                horizontalalignment='left',
-                transform=plt.gca().transAxes,c='red', fontsize=16)
-    if R2_JR_Train != None:
-        plt.text(0.03,0.87,'GC train $R^2$ = '+'{:.2f}'.format(R2_JR_Train),
-                horizontalalignment='left',
-                transform=plt.gca().transAxes,c='green', fontsize=16)
-    if R2_Test != None:
-        plt.text(0.99,0.09,'GP test $R^2$ = '+'{:.2f}'.format(R2_Test),
-                horizontalalignment='right',
-                transform=plt.gca().transAxes,c='blue', fontsize=16)    
-    if R2_JR_Test != None:
-        plt.text(0.99,0.02,'GC test $R^2$ = '+'{:.2f}'.format(R2_JR_Test),
-                horizontalalignment='right',
-                transform=plt.gca().transAxes,c='black', fontsize=16)
-    if save_plot == True:
-        save_path = "Final_Results/" + code + "/" + gpConfigs['SaveName'] +"/" + disc_save + "Parity_Plot_gcgp"
-        save_fig(save_path)
-    else:
-        plt.show()
 
         
 def count_outside_95(Y_Train, Y_Test, Y_Train_Pred, Y_Test_Pred, Y_Train_CI, Y_Test_CI):
@@ -834,40 +546,14 @@ def count_outside_95(Y_Train, Y_Test, Y_Train_Pred, Y_Test_Pred, Y_Train_CI, Y_T
     return num_out95_train, frac_out95_train, num_out95_test, frac_out95_test
     
 
-# -*- coding: utf-8 -*-
-"""
-Script to train a GP on physicochemical properties.
-
-Sections:
-    . Imports
-    . Configuration
-    . Auxiliary Functions
-        . normalize()
-        . buildGP()
-        . gpPredict()
-    . Main Script
-    . Plots
-
-Last edit: 2024-07-22
-Contributors: Dinis Abranches, Montana Carlozo, Barnabas Agbodekhe
-"""
 
 # =============================================================================
-# Imports
-# =============================================================================
+#######################################
 
-# General
-import os
-import warnings
-import time
-# Specific
-import numpy as np
-import pandas as pd
-from sklearn import metrics
-from sklearn import preprocessing
-from sklearn.model_selection import train_test_split
-import gpflow
-from matplotlib import pyplot as plt
+# GP training and property predictions
+
+#######################################
+# =============================================================================
 
 # =============================================================================
 # Configuration
@@ -876,19 +562,22 @@ from matplotlib import pyplot as plt
 
 dbPath=""
 # Property Code
-code='Hvap' # 'Hvap', 'Vc', 'Pc', 'Tc', 'Tb', 'Tm'
+code='Tb' # 'Hvap', 'Vc', 'Pc', 'Tc', 'Tb', 'Tm'
 
-# Define normalization methods
-featureNorm='Standardization' # None,Standardization,MinMax
-labelNorm='Standardization' # None,Standardization,LogStand
-kernel = 'RQ' #Other Options: RQ, RBF, Matern12, Matern32, Matern52
+kernel = 'RQ' # Options: RQ, RBF, Matern12, Matern32, Matern52
 anisotropic = False
-opt_method = 'L-BFGS-B' #Other Options: L-BFGS-B, BFGS
+opt_method = 'L-BFGS-B' # Options: L-BFGS-B, BFGS
 useWhiteKernel = True
 trainLikelihood = False
-save_plot = True 
 retrain_GP = 10
-method_number = 4
+method_number = 3
+
+# Define normalization methods
+if method_number == 2:
+    featureNorm, labelNorm = 'None', 'None'
+else:
+    featureNorm, labelNorm = 'Standardization', 'Standardization'
+
 
 seed = 42
 np.random.seed(seed)
@@ -935,8 +624,7 @@ test_data = np.concatenate((X_Test, Y_Test), axis = 1)
 
 if method_number == 2:
     data_names =  data_names[:1] + [data_names[-1] + " Discrepancy"]
-if method_number == 3:
-    data_names =  data_names[:-1] + [data_names[-1] + " Discrepancy"]
+
 
 train_df = pd.DataFrame(train_data, columns = data_names)
 test_df = pd.DataFrame(test_data, columns = data_names)
@@ -955,18 +643,23 @@ Y_gc_Train_N=Y_gc_Train.copy()
 if featureNorm is not None:
     X_Train_N,skScaler_X=normalize(X_Train,method=featureNorm)
     X_Test_N,__=normalize(X_Test,method=featureNorm,skScaler=skScaler_X)
+else:
+    skScaler_X = None
 if labelNorm is not None:
     Y_Train_N,skScaler_Y=normalize(Y_Train,method=labelNorm)
     Y_gc_Train_N,__=normalize(Y_gc_Train,method=labelNorm, skScaler=skScaler_Y)
+else:
+    skScaler_Y = None
 
 args = (X_Train_N,Y_Train_N, gpConfig)
 retrain_count = 0
 model, best_min_loss, fit_success, cond_num, trained_hyperparams, model_pretrain, sc_y_scale = \
-    train_gp(X_Train_N, Y_Train_N, gpConfig, code, skScaler_Y.scale_, featureNorm, retrain_GP, retrain_count)
+    train_gp(X_Train_N, Y_Train_N, gpConfig, code, skScaler_Y, featureNorm, retrain_GP, retrain_count)
 
 best_lml = -1 * best_min_loss
+best_lml = best_lml.numpy()
 print(best_lml, fit_success, cond_num, trained_hyperparams, sc_y_scale)
-
+print()
 # Save the model summary to a CSV file
 model_file_name = str(save_path +'/model_summary.txt')
 with open(model_file_name, 'w') as file:
@@ -985,7 +678,7 @@ Y_Train_Pred=Y_Train_Pred_N.copy()
 Y_Test_Pred=Y_Test_Pred_N.copy()
 Y_Train_Var=Y_Train_Var_N.copy()
 Y_Test_Var=Y_Test_Var_N.copy()
-if labelNorm is not None:
+if labelNorm != 'None':
     Y_Train_Pred,__=normalize(Y_Train_Pred_N,skScaler=skScaler_Y,
                             method=labelNorm,reverse=True)
     Y_Test_Pred,__=normalize(Y_Test_Pred_N,skScaler=skScaler_Y,
@@ -993,8 +686,9 @@ if labelNorm is not None:
     Y_Train_Var = (skScaler_Y.scale_**2)*Y_Train_Var
     Y_Test_Var = (skScaler_Y.scale_**2)*Y_Test_Var
 
+
 #Get data in from such that Y train and Y test are the actual propery predictions
-if method_number in [2,3]:
+if method_number == 2:
     Y_Test_Pred_plt = Y_Test_Pred + Y_gc_Test 
     Y_Train_Pred_plt = Y_Train_Pred + Y_gc_Train 
     Y_Test_plt = Y_Test + Y_gc_Test 
@@ -1013,6 +707,8 @@ count_CI = count_outside_95(Y_Train_plt, Y_Test_plt,
                  Y_Train_CI_plt, Y_Test_CI_plt)
 count_CI = np.array(count_CI)
 
+
+
 dir_root = "Final_Results/" + code
 os.makedirs(dir_root, exist_ok=True)
 
@@ -1023,20 +719,17 @@ np.savetxt(dir_root+f"/{code}_Y_train_true.txt", Y_Train_plt)
 np.savetxt(dir_root+f"/{code}_Y_test_true.txt", Y_Test_plt)
 np.savetxt(dir_root+f"/{code}_Y_train_pred.txt", Y_Train_Pred_plt)
 np.savetxt(dir_root+f"/{code}_Y_test_pred.txt", Y_Test_Pred_plt)
+
+np.savetxt(dir_root+f"/{code}_Y_gc_train.txt", Y_gc_Train)
+np.savetxt(dir_root+f"/{code}_Y_gc_test.txt", Y_gc_Test)
+
 np.savetxt(dir_root+f"/{code}_Y_train_pred_95CI.txt", Y_Train_CI_plt)
 np.savetxt(dir_root+f"/{code}_Y_test_pred_95CI.txt", Y_Test_CI_plt)
-
-if method_number == 2 or method_number == 3:
-    parity_plot(code, Y_Train_plt, Y_Test_plt, Y_Train_Pred_plt, Y_Test_Pred_plt, Y_Train_CI_plt, Y_Test_CI_plt,
-               gpConfig, save_plot, disc = True)
-else:
-    parity_plot(code, Y_Train_plt, Y_Test_plt, Y_Train_Pred_plt, Y_Test_Pred_plt, Y_Train_CI_plt, Y_Test_CI_plt,
-               gpConfig, save_plot, disc = False)
-    
-if method_number != 2 and method_number != 3:
-    parity_plot_final(code, X, test_idx, trn_idx, Y_Train_plt, Y_Test_plt, Y_Train_Pred_plt, Y_Test_Pred_plt, 
-                  gpConfig, save_plot)
     
     
 tf=time.time()
 print('Time elapsed: '+'{:.2f}'.format(tf-ti)+' s')
+
+
+
+

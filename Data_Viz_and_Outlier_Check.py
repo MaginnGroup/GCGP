@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 from scipy.optimize import curve_fit
 from matplotlib import pyplot as plt
+import textwrap
 
 
 
@@ -76,13 +77,13 @@ for i, prop in enumerate(code_list):
     twoD_scatter = ax.scatter(Y_gc, Y_exp, marker='o', edgecolors='blue', facecolors='none', alpha=0.9, \
               c=X[:,0], cmap='viridis', s=100, edgecolor='k')
     plot_perfect_parity(X[:,1], Y_exp, num_std, True)
-
-    plt.yticks(fontsize=20)
-    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20, weight='light')
+    plt.xticks(fontsize=20, weight='light')
     ax.minorticks_on()
     ax.tick_params(axis='x', labelrotation=45)
     plt.xlabel('GC '+ax_lab+' '+units, fontsize=20, weight='bold')
     plt.ylabel('Exp. '+ax_lab+' '+units, fontsize=20, weight='bold')
+
 
     cbar = plt.colorbar(twoD_scatter)
     cbar.set_label('MW '+MW_units, fontsize=20)
@@ -92,30 +93,72 @@ for i, prop in enumerate(code_list):
         fig.savefig(dir_root+"2D_Exp_vs_GC_plot.png", bbox_inches='tight')
     plt.show()
 
-
     # Create a 3D scatter plot
-    fig = plt.figure(figsize=(10, 8))
+    plt.rcParams['figure.dpi'] = 100
+    fig = plt.figure(figsize=(27, 33))
     ax = fig.add_subplot(111, projection='3d')
-    threeD_scatter = ax.scatter(Y_gc, mol_wt, Y_disc, c=Y_disc, cmap='viridis', s=100)
-    cbar = plt.colorbar(threeD_scatter, shrink=0.5, aspect=20, pad=0.07)
-    cbar.set_label(ax_lab+' '+'Disc. '+units, fontsize=20)
-    cbar.ax.tick_params(labelsize=20)
+    plt.tight_layout()
+    threeD_scatter = ax.scatter(Y_gc, mol_wt, Y_exp, c=Y_disc, cmap='viridis', s=1000)
+    
+    cbar_label = f'(GC {ax_lab} - Exp. {ax_lab})'+' '+units
+    cbar_wrapped_label = "\n".join(textwrap.wrap(cbar_label, width=50))
+    cax = fig.add_axes([1.13, 0.2, 0.03, 0.6])
+    cbar = plt.colorbar(threeD_scatter, cax=cax, shrink=0.5, aspect=20, pad=0.35)
+    cbar.set_label(cbar_wrapped_label, fontsize=90)
+    cbar.ax.tick_params(labelsize=80)
+    
+    ThreeD_wrap_width = 25
+    x_label = 'GC '+ax_lab+' '+units
+    x_wrapped_label = "\n".join(textwrap.wrap(x_label, width=ThreeD_wrap_width*2))
+    y_label = 'MW '+MW_units
+    y_wrapped_label = "\n".join(textwrap.wrap(y_label, width=ThreeD_wrap_width))
+    z_label = 'Exp. '+ax_lab+' '+units
+    z_wrapped_label = "\n".join(textwrap.wrap(z_label, width=ThreeD_wrap_width))
+    
+    labelsize = 90
+    
+    if code == 'Hvap':
+        x_labelpad = 90
+    elif code == 'Vc':
+        x_labelpad = 100
+    else:
+        x_labelpad = 110
+    if code == 'Tb' or code == 'Tm':
+        y_labelpad = 130
+    else: # code == 'Vc':
+        y_labelpad = 110
+    ax.set_xlabel(x_wrapped_label, fontsize=labelsize, weight='bold', labelpad=x_labelpad)
+    ax.set_ylabel(y_wrapped_label, fontsize=labelsize, weight='bold', labelpad=y_labelpad)
+    ax.set_zlabel(z_wrapped_label, fontsize=labelsize, weight='bold', labelpad=130)
+    
+    # Customize the tick labels to ensure they are not bold
+    ticksize = 95
+    for axis in [ax.xaxis, ax.yaxis, ax.zaxis]:
+        axis.set_tick_params(labelsize=ticksize)  # Adjust label size as needed
+        labels = axis.get_ticklabels()
+        for label in labels:
+            label.set_fontweight('normal')  # Ensure font weight is not bold
 
-    ax.set_xlabel('GC '+ax_lab+' '+units, fontsize=20, weight='bold', labelpad=20)
-    ax.set_ylabel('MW '+MW_units, fontsize=20, weight='bold', labelpad=16)
-    ax.set_zlabel(ax_lab+' '+'Disc. '+units, fontsize=20, weight='bold', labelpad=16)
-    ax.tick_params(axis='x', labelsize=20)
-    ax.tick_params(axis='y', labelsize=20)
-    ax.tick_params(axis='z', labelsize=20)
+
     ax.grid(False)
-    ax.tick_params(axis='x', labelrotation=15)
+    
+    if code == 'Tc':
+        x_labelrot = 8
+    else: # code == 'Vc':
+        x_labelrot = -1
+    ax.tick_params(axis='x', labelrotation=x_labelrot)
     ax.tick_params(axis='y', labelrotation=-15)
+    
+    #ax.xaxis.label.set_rotation_mode('anchor')
+    #ax.xaxis.label.set_horizontalalignment('left')
 
     plt.tight_layout()
     if save_plot:
-        fig.savefig(dir_root+"3D_GC_vs_MW_vs_Disc_plot.png", bbox_inches='tight')
+        fig.savefig(dir_root+"3D_GC_vs_MW_vs_Disc_plot.png", bbox_inches='tight', pad_inches=15)
     plt.show()
-
+    
+    
+    
 
 def z_score_analysis(X, num_std):
     mean_x = np.mean(X)

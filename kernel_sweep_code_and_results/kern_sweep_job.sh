@@ -1,8 +1,8 @@
 #!/bin/bash
 
 
-#$ -q long              # Specify queue
-#$ -pe smp 8                # Specify number of cores to use.
+#$ -q *@@maginn              # Specify queue
+#$ -pe smp 4                # Specify number of cores to use.
 #$ -N kern_sweep          # Specify job name
 
 

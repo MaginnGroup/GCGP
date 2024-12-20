@@ -2,8 +2,8 @@
 """
 Script to train a GP on physicochemical properties.
 
-Last edit: 2024-08-17
-Contributors: Dinis Abranches, Montana Carlozo, Barnabas Agbodekhe
+Last edit: 2024-09-01
+Contributors: Barnabas Agbodekhe, Montana Carlozo, Dinis Abranches
 """
 
 
@@ -17,6 +17,7 @@ import pandas as pd
 from sklearn import metrics
 from sklearn import preprocessing
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import r2_score, mean_absolute_error
 from skmultilearn.model_selection import iterative_train_test_split
 import gpflow
 from gpflow.utilities import print_summary, set_trainable, deepcopy
@@ -72,10 +73,9 @@ def gpConfig_from_method(method_number, code, kernel = 'RBF', anisotropic = Fals
     Note:
     method_number is used to define which type of gp model to use
     1: Y = GP(0, K(Mw, Y_gc))
-    2: Y - Y_gc = GP(0, K(Mw))
-    3: Y - Y_gc = GP(0, K(Mw, Y_gc))
-    4: Y = GP(Y_gc, K(Mw, Y_gc))
-    5: Y = GP(AMw + BY_gc + c, K(Mw, Y_gc))
+    2: Y = GP(Y_gc, K(Mw))
+    3: Y = GP(Y_gc, K(Mw, Y_gc))
+    4: Y = GP(AMw + BY_gc + c, K(Mw, Y_gc))
     """
     gpConfig={'kernel': kernel,
            'useWhiteKernel':useWhiteKernel,
@@ -87,8 +87,8 @@ def gpConfig_from_method(method_number, code, kernel = 'RBF', anisotropic = Fals
         gpConfig['Name']='y_exp = GP(0, K(x1,x2))'
         gpConfig['SaveName']='model_1'
     if method_number == 2:
-        gpConfig['mean_function']='Zero'
-        gpConfig['Name']='y_exp = y_GC + GP(0, K(x1))'
+        gpConfig['mean_function']='Custom'
+        gpConfig['Name']='y_exp = GP(y_GC, K(x1))'
         gpConfig['SaveName']='model_2'
     if method_number == 3:
         gpConfig['mean_function']='Constant'
@@ -128,37 +128,12 @@ def get_gp_data(X, Y, method_number):
         X_gp = X[:,0].reshape(-1,1)
     else:
         X_gp = X
-    if method_number == 2:
-        Y_gp = Y - X[:,1]
-    else:
-        Y_gp = Y
+    Y_gp = Y
     Y_gp = Y_gp.reshape(-1,1)
     Y_gc = X[:,1].reshape(-1,1)
     return X_gp, Y_gp, Y_gc
 
 
-def discrepancy_to_property(method_number, y_pred, y_gc, idx):
-    """
-    Adds discrepancy to property based on the method number
-    Parameters:
-    method_number : int
-        Method number
-    y_pred : numpy array
-        GP predicted output
-    y_gc : numpy array
-        Predicted GC method results
-    idx : np.array
-        Index of the y_gc to be added to y_pred
-
-    Returns:
-    y_prop : numpy array
-        Predicted property value
-    """
-    if method_number == 2:
-        y_prop = y_pred + y_gc[idx.flatten(),:]
-    else:
-        y_prop = y_pred
-    return y_prop
 
 def stratifyvector(Y):
     """
@@ -266,8 +241,36 @@ def normalize(inputArray,skScaler=None,method='Standardization',reverse=False):
 
 
 
+class CustomMeanFunction(gpflow.mean_functions.MeanFunction):
+    def __init__(self, X_train, Z_train):
+        super().__init__()
+        self.X_train = X_train
+        self.Z_train = Z_train
+        self.X_test = None
+        self.Z_test = None
+
+    def update_Z_test(self, X_test, Z_test):
+        """Update the mean function with the test data."""
+        self.X_test = X_test
+        self.Z_test = Z_test
+
+    def __call__(self, X):
+        # Determine whether we are in the training or testing phase
+        if self.X_test is not None and np.array_equal(X, self.X_test):
+            # In testing phase, return Z_test values
+            return tf.convert_to_tensor(self.Z_test, dtype=tf.float64)
+        elif np.array_equal(X, self.X_train):
+            # In training phase, return Z_train values
+            return tf.convert_to_tensor(self.Z_train, dtype=tf.float64)
+        else:
+            raise ValueError("The provided X values do not match the stored training or test X values.")        
+        
+        
+        
+        
+
 # Build GPR model function with bounded hyperparameters
-def build_model_with_bounded_params(X, Y, kern, low, high, \
+def build_model_with_bounded_params(X, Y, Y_gc, kern, low, high, \
                                     high_alpha, init_val1, init_val2, init_val3, \
                                     useWhite, trainLikelihood, anisotropic, typeMeanFunc):
     """
@@ -280,6 +283,8 @@ def build_model_with_bounded_params(X, Y, kern, low, high, \
         Feature data
     Y : numpy array
         Label data
+    Y_gc: numpy array
+        GC predictions for use in custom mean function
     low : float
         lower bound on all hyperparameters
     high : float
@@ -342,6 +347,8 @@ def build_model_with_bounded_params(X, Y, kern, low, high, \
         
     if typeMeanFunc == 'Zero':
         mf = None
+    if typeMeanFunc == 'Custom':
+        mf = CustomMeanFunction(X, Y_gc)
     if typeMeanFunc == 'Constant':
         #If constant value is selected but no value is given, default to zero mean
         mf_val = np.array([0,1]).reshape(-1,1)
@@ -359,7 +366,7 @@ def build_model_with_bounded_params(X, Y, kern, low, high, \
 
 
 
-def buildGP(X_Train, Y_Train, gpConfig, code, featurenorm, retrain_count):
+def buildGP(X_Train, Y_Train, Y_gc, gpConfig, code, featurenorm, retrain_count):
     """
     buildGP() builds and fits a GP model using the training data provided.
 
@@ -418,8 +425,13 @@ def buildGP(X_Train, Y_Train, gpConfig, code, featurenorm, retrain_count):
         init_val2 = np.array(np.random.uniform(0, 100))
         init_val3 = np.array(np.random.lognormal(0, 1.0))
     
-    model = build_model_with_bounded_params(X_Train, Y_Train, kernel, 0.00001, 100, 5000, init_val1, \
-                            init_val2, init_val3, useWhiteKernel, trainLikelihood, anisotropy, typeMeanFunc)
+    low_bound = 1e-5
+    up_bound = 1e2
+    alpha_up_bound = 5e3
+    
+    model = build_model_with_bounded_params(X_Train, Y_Train, Y_gc, kernel, low_bound, up_bound, alpha_up_bound,\
+                                            init_val1, init_val2, init_val3, useWhiteKernel, \
+                                            trainLikelihood, anisotropy, typeMeanFunc)
     model_pretrain = deepcopy(model)
     # print(gpflow.utilities.print_summary(model))
     condition_number = np.linalg.cond(model.kernel(X_Train))
@@ -440,7 +452,7 @@ def buildGP(X_Train, Y_Train, gpConfig, code, featurenorm, retrain_count):
 
 
 
-def train_gp(X_Train, Y_Train, gpConfig, code, sc_y, featurenorm, retrain_GP, retrain_count):
+def train_gp(X_Train, Y_Train, Y_gc, gpConfig, code, sc_y, featurenorm, retrain_GP, retrain_count):
     """
     Trains the GP given training data.
     
@@ -459,7 +471,7 @@ def train_gp(X_Train, Y_Train, gpConfig, code, sc_y, featurenorm, retrain_GP, re
     retrain_count = retrain_count
     for i in range(retrain_GP):
         model, aux, condition_number, obj_func, opt_success, retrain_count, model_pretrain = \
-            buildGP(X_Train, Y_Train, gpConfig, code, featurenorm, retrain_count)
+            buildGP(X_Train, Y_Train, Y_gc, gpConfig, code, featurenorm, retrain_count)
         print(f"training_loss = {obj_func}")
         print(f"condition_number = {condition_number}")
         retrain_count += 1
@@ -516,42 +528,14 @@ def gpPredict(model,X):
     return Y,VAR
 
 
-
-        
-def count_outside_95(Y_Train, Y_Test, Y_Train_Pred, Y_Test_Pred, Y_Train_CI, Y_Test_CI):
-    """
-    count_outside_95() finds the number and fraction of predicted data that are outside the predicted 95%
-        confidence intervals from the true values
-
-    Parameters:
-    Y_Train_CI : numpy array
-        Absolute values of the 95% confidence interval on the predictions on training set
-    Y_Test_CI : numpy array
-        Absolute values of the 95% confidence interval on the predictions on testing set
-    
-    """
-    out_95_train = []
-    out_95_test = []
-    for index, value in enumerate(Y_Train):
-        if np.abs(value - Y_Train_Pred[index]) > Y_Train_CI[index]:
-            out_95_train.append(index)
-    num_out95_train = len(out_95_train)
-    frac_out95_train = num_out95_train/len(Y_Train)
-    for index, value in enumerate(Y_Test):
-        if np.abs(value - Y_Test_Pred[index]) > Y_Test_CI[index]:
-            out_95_test.append(index)
-    num_out95_test = len(out_95_test)
-    frac_out95_test = num_out95_test/len(Y_Test)
-    
-    return num_out95_train, frac_out95_train, num_out95_test, frac_out95_test
-    
-
-
 def evaluate(y_true, y_pred):
     r2 = r2_score(y_true, y_pred)
     mapd = np.mean(np.abs((y_true - y_pred) / y_true)) * 100
     mae = np.mean(np.abs((y_true - y_pred)))
     return r2, mapd, mae
+
+
+    
 
 
 # =============================================================================
@@ -570,20 +554,19 @@ def evaluate(y_true, y_pred):
 dbPath=""
 # Property Code
 code='prop_ID' # 'Hvap', 'Vc', 'Pc', 'Tc', 'Tb', 'Tm'
-kernel = 'kern_ID'  #Options: RQ, RBF, Matern12, Matern32, Matern52
+# Other placeholders
+kernel = 'kern_ID'  #Other Options: RQ, RBF, Matern12, Matern32, Matern52
 anisotropic = anisotropy_ID
 method_number = method_ID
+# Define normalization methods
+featureNorm='Standardization' # None,Standardization,MinMax
+labelNorm='Standardization' # None,Standardization,LogStand
 opt_method = 'L-BFGS-B' #Other Options: L-BFGS-B, BFGS
 useWhiteKernel = True
 trainLikelihood = False
+save_plot = True 
 retrain_GP = 10
 
-
-# Define normalization methods
-if method_number == 2:
-    featureNorm, labelNorm = 'None', 'None'
-else:
-    featureNorm, labelNorm = 'Standardization', 'Standardization'
 
 
 seed = 42
@@ -630,7 +613,7 @@ train_data = np.concatenate((X_Train, Y_Train), axis = 1)
 test_data = np.concatenate((X_Test, Y_Test), axis = 1)
 
 if method_number == 2:
-    data_names =  data_names[:1] + [data_names[-1] + " Discrepancy"]
+    data_names =  [data_names[0], data_names[-1]]
 
 
 train_df = pd.DataFrame(train_data, columns = data_names)
@@ -647,6 +630,7 @@ X_Train_N=X_Train.copy()
 X_Test_N=X_Test.copy()
 Y_Train_N=Y_Train.copy()
 Y_gc_Train_N=Y_gc_Train.copy()
+Y_gc_Test_N=Y_gc_Test.copy()
 if featureNorm is not None:
     X_Train_N,skScaler_X=normalize(X_Train,method=featureNorm)
     X_Test_N,__=normalize(X_Test,method=featureNorm,skScaler=skScaler_X)
@@ -655,22 +639,34 @@ else:
 if labelNorm is not None:
     Y_Train_N,skScaler_Y=normalize(Y_Train,method=labelNorm)
     Y_gc_Train_N,__=normalize(Y_gc_Train,method=labelNorm, skScaler=skScaler_Y)
+    Y_gc_Test_N,__=normalize(Y_gc_Test,method=labelNorm, skScaler=skScaler_Y)
 else:
     skScaler_Y = None
 
 args = (X_Train_N,Y_Train_N, gpConfig)
 retrain_count = 0
 model, best_min_loss, fit_success, cond_num, trained_hyperparams, model_pretrain, sc_y_scale = \
-    train_gp(X_Train_N, Y_Train_N, gpConfig, code, skScaler_Y, featureNorm, retrain_GP, retrain_count)
+    train_gp(X_Train_N, Y_Train_N, Y_gc_Train_N, gpConfig, code, skScaler_Y, featureNorm, retrain_GP, retrain_count)
 
 best_lml = -1 * best_min_loss
 best_lml = best_lml.numpy()
 print(best_lml, fit_success, cond_num, trained_hyperparams, sc_y_scale)
 print()
-
+# Save the model summary to a CSV file
+model_file_name = str(save_path +'/model_summary.txt')
+with open(model_file_name, 'w') as file:
+    val = gpflow.utilities.read_values(model)
+    file.write(str(val))
+    file.write("\n Condition Number: " + str(cond_num))
+    file.write("\n Fit Success?: " + str(fit_success))
+    file.write("\n Log-marginal Likelihood: " + str(best_lml))
 
 # # Get GP predictions
 Y_Train_Pred_N,Y_Train_Var_N=gpPredict(model,X_Train_N)
+
+if method_number == 2:
+    model.mean_function.update_Z_test(X_Test_N, Y_gc_Test_N)
+
 Y_Test_Pred_N,Y_Test_Var_N=gpPredict(model,X_Test_N)
 
 # # Unnormalize
@@ -687,17 +683,11 @@ if labelNorm != 'None':
     Y_Test_Var = (skScaler_Y.scale_**2)*Y_Test_Var
 
 
-#Get data in from such that Y train and Y test are the actual propery predictions
-if method_number == 2:
-    Y_Test_Pred_plt = Y_Test_Pred + Y_gc_Test 
-    Y_Train_Pred_plt = Y_Train_Pred + Y_gc_Train 
-    Y_Test_plt = Y_Test + Y_gc_Test 
-    Y_Train_plt = Y_Train + Y_gc_Train 
-else:
-    Y_Test_Pred_plt = Y_Test_Pred  
-    Y_Train_Pred_plt = Y_Train_Pred
-    Y_Test_plt = Y_Test 
-    Y_Train_plt = Y_Train
+Y_Test_Pred_plt = Y_Test_Pred  
+Y_Train_Pred_plt = Y_Train_Pred
+Y_Test_plt = Y_Test 
+Y_Train_plt = Y_Train
+
     
     
 r2_train, mapd_train, mae_train = evaluate(Y_Train_plt, Y_Train_Pred_plt)

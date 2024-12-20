@@ -1,11 +1,12 @@
-{'.kernel.kernels[0].variance': array(8.58018828), '.kernel.kernels[0].lengthscales': array([0.55593303, 0.80965137]), '.kernel.kernels[1].variance': array(0.06949616), '.likelihood.variance': array(1.e-05)}
- Label standard scaler scale parameter: [51.68857326]
- Condition Number: 142.0175274107254
+{'.mean_function.A': array([[0.],
+       [1.]]), '.mean_function.b': array([0.]), '.kernel.kernels[0].variance': array(0.10530142), '.kernel.kernels[0].lengthscales': array([0.33590545, 0.56569865]), '.kernel.kernels[1].variance': array(0.00210924), '.likelihood.variance': array(1.e-05)}
+ Label standard scaler scale parameter: [289.67108698]
+ Condition Number: 174.21627639472518
  Fit Success?: True
- Test MAPD: 3.9481641476043015
- Train MAPD: 2.2523906622031977
- Test MAE: 19.356849661913884
- Train MAE: 8.34395991408306
- Test R2: 0.9773052170723338
- Train R2: 0.9984370733535191
- Log-marginal Likelihood: -312.86342498613357
+ Test MAPD: 3.786329483981443
+ Train MAPD: 2.1658324282734895
+ Test MAE: 17.97228893139527
+ Train MAE: 8.051526066151892
+ Test R2: 0.9795189062199111
+ Train R2: 0.9985439827613473
+ Log-marginal Likelihood: 665.0572225375461

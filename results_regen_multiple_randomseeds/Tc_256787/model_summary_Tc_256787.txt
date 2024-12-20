@@ -1,0 +1,16 @@
+{'.mean_function.A': array([[0.],
+       [1.]]), '.mean_function.b': array([0.]), '.kernel.kernels[0].variance': array(1.63836501), '.kernel.kernels[0].lengthscales': array(2.06050015), '.kernel.kernels[0].alpha': array(0.34809699), '.kernel.kernels[1].variance': array(0.0516927), '.likelihood.variance': array(1.e-05)}
+ Property: Tc
+ Seed: 256787
+ Log-marginal Likelihood: -15.877451046780266
+ Test MAPD: 4.472232720683176
+ Train MAPD: 3.2005227213759655
+ Test MAE: 23.06079488011842
+ Train MAE: 17.835026411036463
+ Test RMSE: 39.649642961730535
+ Train RMSE: 26.912094590568515
+ Test R2: 0.8953677002843079
+ Train R2: 0.9512324169548309
+ Label standard scaler scale parameter: [121.86581141]
+ Condition Number: 354.3411758905069
+ Fit Success?: True

@@ -1,0 +1,5 @@
+{'.mean_function.A': array([[0.],
+       [1.]]), '.mean_function.b': array([0.]), '.kernel.kernels[0].variance': array(6.30999743), '.kernel.kernels[0].lengthscales': array([13.44144072,  1.24298848]), '.kernel.kernels[1].variance': array(0.09904938), '.likelihood.variance': array(1.e-05)}
+ Condition Number: 1228.1160670395413
+ Fit Success?: True
+ Log-marginal Likelihood: -135.14424301202484

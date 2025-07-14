@@ -1,0 +1,162 @@
+Loading python/3.12.8
+  Loading requirement: tcl/8.6.12
+Defaulting to user installation because normal site-packages is not writeable
+Requirement already satisfied: scikit-multilearn in /users/bagbodek/.local/lib/python3.9/site-packages (0.2.0)
+Defaulting to user installation because normal site-packages is not writeable
+Requirement already satisfied: tensorflow in /users/bagbodek/.local/lib/python3.9/site-packages (2.19.0)
+Requirement already satisfied: astunparse>=1.6.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow) (1.6.3)
+Requirement already satisfied: grpcio<2.0,>=1.24.3 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow) (1.71.0)
+Requirement already satisfied: absl-py>=1.0.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow) (2.3.0)
+Requirement already satisfied: ml-dtypes<1.0.0,>=0.5.1 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow) (0.5.1)
+Requirement already satisfied: setuptools in /usr/lib/python3.9/site-packages (from tensorflow) (53.0.0)
+Requirement already satisfied: wrapt>=1.11.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow) (1.17.2)
+Requirement already satisfied: tensorboard~=2.19.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow) (2.19.0)
+Requirement already satisfied: opt-einsum>=2.3.2 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow) (3.4.0)
+Requirement already satisfied: numpy<2.2.0,>=1.26.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow) (1.26.4)
+Requirement already satisfied: flatbuffers>=24.3.25 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow) (25.2.10)
+Requirement already satisfied: termcolor>=1.1.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow) (3.1.0)
+Requirement already satisfied: tensorflow-io-gcs-filesystem>=0.23.1 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow) (0.37.1)
+Requirement already satisfied: six>=1.12.0 in /usr/lib/python3.9/site-packages (from tensorflow) (1.15.0)
+Requirement already satisfied: requests<3,>=2.21.0 in /usr/lib/python3.9/site-packages (from tensorflow) (2.25.1)
+Requirement already satisfied: typing-extensions>=3.6.6 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow) (4.13.2)
+Requirement already satisfied: packaging in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow) (25.0)
+Requirement already satisfied: keras>=3.5.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow) (3.10.0)
+Requirement already satisfied: h5py>=3.11.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow) (3.13.0)
+Requirement already satisfied: google-pasta>=0.1.1 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow) (0.2.0)
+Requirement already satisfied: protobuf!=4.21.0,!=4.21.1,!=4.21.2,!=4.21.3,!=4.21.4,!=4.21.5,<6.0.0dev,>=3.20.3 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow) (5.29.5)
+Requirement already satisfied: libclang>=13.0.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow) (18.1.1)
+Requirement already satisfied: gast!=0.5.0,!=0.5.1,!=0.5.2,>=0.2.1 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow) (0.6.0)
+Requirement already satisfied: wheel<1.0,>=0.23.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from astunparse>=1.6.0->tensorflow) (0.45.1)
+Requirement already satisfied: namex in /users/bagbodek/.local/lib/python3.9/site-packages (from keras>=3.5.0->tensorflow) (0.1.0)
+Requirement already satisfied: rich in /users/bagbodek/.local/lib/python3.9/site-packages (from keras>=3.5.0->tensorflow) (14.0.0)
+Requirement already satisfied: optree in /users/bagbodek/.local/lib/python3.9/site-packages (from keras>=3.5.0->tensorflow) (0.16.0)
+Requirement already satisfied: chardet<5,>=3.0.2 in /usr/lib/python3.9/site-packages (from requests<3,>=2.21.0->tensorflow) (4.0.0)
+Requirement already satisfied: urllib3<1.27,>=1.21.1 in /usr/lib/python3.9/site-packages (from requests<3,>=2.21.0->tensorflow) (1.26.5)
+Requirement already satisfied: idna<3,>=2.5 in /usr/lib/python3.9/site-packages (from requests<3,>=2.21.0->tensorflow) (2.10)
+Requirement already satisfied: werkzeug>=1.0.1 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorboard~=2.19.0->tensorflow) (3.1.3)
+Requirement already satisfied: markdown>=2.6.8 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorboard~=2.19.0->tensorflow) (3.8)
+Requirement already satisfied: tensorboard-data-server<0.8.0,>=0.7.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorboard~=2.19.0->tensorflow) (0.7.2)
+Requirement already satisfied: importlib-metadata>=4.4 in /users/bagbodek/.local/lib/python3.9/site-packages (from markdown>=2.6.8->tensorboard~=2.19.0->tensorflow) (8.7.0)
+Requirement already satisfied: MarkupSafe>=2.1.1 in /users/bagbodek/.local/lib/python3.9/site-packages (from werkzeug>=1.0.1->tensorboard~=2.19.0->tensorflow) (3.0.2)
+Requirement already satisfied: markdown-it-py>=2.2.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from rich->keras>=3.5.0->tensorflow) (3.0.0)
+Requirement already satisfied: pygments<3.0.0,>=2.13.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from rich->keras>=3.5.0->tensorflow) (2.19.1)
+Requirement already satisfied: zipp>=3.20 in /users/bagbodek/.local/lib/python3.9/site-packages (from importlib-metadata>=4.4->markdown>=2.6.8->tensorboard~=2.19.0->tensorflow) (3.22.0)
+Requirement already satisfied: mdurl~=0.1 in /users/bagbodek/.local/lib/python3.9/site-packages (from markdown-it-py>=2.2.0->rich->keras>=3.5.0->tensorflow) (0.1.2)
+Defaulting to user installation because normal site-packages is not writeable
+Requirement already satisfied: gpflow in /users/bagbodek/.local/lib/python3.9/site-packages (2.10.0)
+Requirement already satisfied: numpy<2 in /users/bagbodek/.local/lib/python3.9/site-packages (from gpflow) (1.26.4)
+Requirement already satisfied: scipy in /users/bagbodek/.local/lib/python3.9/site-packages (from gpflow) (1.13.1)
+Requirement already satisfied: setuptools>=41.0.0 in /usr/lib/python3.9/site-packages (from gpflow) (53.0.0)
+Requirement already satisfied: deprecated in /users/bagbodek/.local/lib/python3.9/site-packages (from gpflow) (1.2.18)
+Requirement already satisfied: typing-extensions in /users/bagbodek/.local/lib/python3.9/site-packages (from gpflow) (4.13.2)
+Requirement already satisfied: tensorflow>=2.4.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from gpflow) (2.19.0)
+Requirement already satisfied: packaging in /users/bagbodek/.local/lib/python3.9/site-packages (from gpflow) (25.0)
+Requirement already satisfied: check-shapes>=1.0.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from gpflow) (1.1.1)
+Requirement already satisfied: tensorflow-probability[tf]>=0.12.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from gpflow) (0.25.0)
+Requirement already satisfied: tabulate in /users/bagbodek/.local/lib/python3.9/site-packages (from gpflow) (0.9.0)
+Requirement already satisfied: multipledispatch>=0.6 in /users/bagbodek/.local/lib/python3.9/site-packages (from gpflow) (1.0.0)
+Requirement already satisfied: lark<2.0.0,>=1.1.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from check-shapes>=1.0.0->gpflow) (1.2.2)
+Requirement already satisfied: dropstackframe>=0.1.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from check-shapes>=1.0.0->gpflow) (0.1.0)
+Requirement already satisfied: absl-py>=1.0.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow>=2.4.0->gpflow) (2.3.0)
+Requirement already satisfied: gast!=0.5.0,!=0.5.1,!=0.5.2,>=0.2.1 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow>=2.4.0->gpflow) (0.6.0)
+Requirement already satisfied: tensorflow-io-gcs-filesystem>=0.23.1 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow>=2.4.0->gpflow) (0.37.1)
+Requirement already satisfied: wrapt>=1.11.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow>=2.4.0->gpflow) (1.17.2)
+Requirement already satisfied: keras>=3.5.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow>=2.4.0->gpflow) (3.10.0)
+Requirement already satisfied: h5py>=3.11.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow>=2.4.0->gpflow) (3.13.0)
+Requirement already satisfied: termcolor>=1.1.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow>=2.4.0->gpflow) (3.1.0)
+Requirement already satisfied: requests<3,>=2.21.0 in /usr/lib/python3.9/site-packages (from tensorflow>=2.4.0->gpflow) (2.25.1)
+Requirement already satisfied: tensorboard~=2.19.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow>=2.4.0->gpflow) (2.19.0)
+Requirement already satisfied: flatbuffers>=24.3.25 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow>=2.4.0->gpflow) (25.2.10)
+Requirement already satisfied: six>=1.12.0 in /usr/lib/python3.9/site-packages (from tensorflow>=2.4.0->gpflow) (1.15.0)
+Requirement already satisfied: ml-dtypes<1.0.0,>=0.5.1 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow>=2.4.0->gpflow) (0.5.1)
+Requirement already satisfied: libclang>=13.0.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow>=2.4.0->gpflow) (18.1.1)
+Requirement already satisfied: grpcio<2.0,>=1.24.3 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow>=2.4.0->gpflow) (1.71.0)
+Requirement already satisfied: opt-einsum>=2.3.2 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow>=2.4.0->gpflow) (3.4.0)
+Requirement already satisfied: protobuf!=4.21.0,!=4.21.1,!=4.21.2,!=4.21.3,!=4.21.4,!=4.21.5,<6.0.0dev,>=3.20.3 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow>=2.4.0->gpflow) (5.29.5)
+Requirement already satisfied: astunparse>=1.6.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow>=2.4.0->gpflow) (1.6.3)
+Requirement already satisfied: google-pasta>=0.1.1 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow>=2.4.0->gpflow) (0.2.0)
+Requirement already satisfied: decorator in /usr/lib/python3.9/site-packages (from tensorflow-probability[tf]>=0.12.0->gpflow) (4.4.2)
+Requirement already satisfied: dm-tree in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow-probability[tf]>=0.12.0->gpflow) (0.1.8)
+Requirement already satisfied: cloudpickle>=1.3 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow-probability[tf]>=0.12.0->gpflow) (3.1.1)
+Requirement already satisfied: tf-keras>=2.16 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow-probability[tf]>=0.12.0->gpflow) (2.19.0)
+Requirement already satisfied: wheel<1.0,>=0.23.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from astunparse>=1.6.0->tensorflow>=2.4.0->gpflow) (0.45.1)
+Requirement already satisfied: namex in /users/bagbodek/.local/lib/python3.9/site-packages (from keras>=3.5.0->tensorflow>=2.4.0->gpflow) (0.1.0)
+Requirement already satisfied: optree in /users/bagbodek/.local/lib/python3.9/site-packages (from keras>=3.5.0->tensorflow>=2.4.0->gpflow) (0.16.0)
+Requirement already satisfied: rich in /users/bagbodek/.local/lib/python3.9/site-packages (from keras>=3.5.0->tensorflow>=2.4.0->gpflow) (14.0.0)
+Requirement already satisfied: chardet<5,>=3.0.2 in /usr/lib/python3.9/site-packages (from requests<3,>=2.21.0->tensorflow>=2.4.0->gpflow) (4.0.0)
+Requirement already satisfied: idna<3,>=2.5 in /usr/lib/python3.9/site-packages (from requests<3,>=2.21.0->tensorflow>=2.4.0->gpflow) (2.10)
+Requirement already satisfied: urllib3<1.27,>=1.21.1 in /usr/lib/python3.9/site-packages (from requests<3,>=2.21.0->tensorflow>=2.4.0->gpflow) (1.26.5)
+Requirement already satisfied: markdown>=2.6.8 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorboard~=2.19.0->tensorflow>=2.4.0->gpflow) (3.8)
+Requirement already satisfied: werkzeug>=1.0.1 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorboard~=2.19.0->tensorflow>=2.4.0->gpflow) (3.1.3)
+Requirement already satisfied: tensorboard-data-server<0.8.0,>=0.7.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorboard~=2.19.0->tensorflow>=2.4.0->gpflow) (0.7.2)
+Requirement already satisfied: importlib-metadata>=4.4 in /users/bagbodek/.local/lib/python3.9/site-packages (from markdown>=2.6.8->tensorboard~=2.19.0->tensorflow>=2.4.0->gpflow) (8.7.0)
+Requirement already satisfied: MarkupSafe>=2.1.1 in /users/bagbodek/.local/lib/python3.9/site-packages (from werkzeug>=1.0.1->tensorboard~=2.19.0->tensorflow>=2.4.0->gpflow) (3.0.2)
+Requirement already satisfied: pygments<3.0.0,>=2.13.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from rich->keras>=3.5.0->tensorflow>=2.4.0->gpflow) (2.19.1)
+Requirement already satisfied: markdown-it-py>=2.2.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from rich->keras>=3.5.0->tensorflow>=2.4.0->gpflow) (3.0.0)
+Requirement already satisfied: zipp>=3.20 in /users/bagbodek/.local/lib/python3.9/site-packages (from importlib-metadata>=4.4->markdown>=2.6.8->tensorboard~=2.19.0->tensorflow>=2.4.0->gpflow) (3.22.0)
+Requirement already satisfied: mdurl~=0.1 in /users/bagbodek/.local/lib/python3.9/site-packages (from markdown-it-py>=2.2.0->rich->keras>=3.5.0->tensorflow>=2.4.0->gpflow) (0.1.2)
+Defaulting to user installation because normal site-packages is not writeable
+Requirement already satisfied: scikit-learn in /users/bagbodek/.local/lib/python3.9/site-packages (1.6.1)
+Requirement already satisfied: scipy>=1.6.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from scikit-learn) (1.13.1)
+Requirement already satisfied: threadpoolctl>=3.1.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from scikit-learn) (3.6.0)
+Requirement already satisfied: numpy>=1.19.5 in /users/bagbodek/.local/lib/python3.9/site-packages (from scikit-learn) (1.26.4)
+Requirement already satisfied: joblib>=1.2.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from scikit-learn) (1.5.1)
+Defaulting to user installation because normal site-packages is not writeable
+Requirement already satisfied: scipy in /users/bagbodek/.local/lib/python3.9/site-packages (1.13.1)
+Requirement already satisfied: numpy<2.3,>=1.22.4 in /users/bagbodek/.local/lib/python3.9/site-packages (from scipy) (1.26.4)
+Defaulting to user installation because normal site-packages is not writeable
+Requirement already satisfied: matplotlib in /users/bagbodek/.local/lib/python3.9/site-packages (3.9.4)
+Requirement already satisfied: contourpy>=1.0.1 in /users/bagbodek/.local/lib/python3.9/site-packages (from matplotlib) (1.3.0)
+Requirement already satisfied: importlib-resources>=3.2.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from matplotlib) (6.5.2)
+Requirement already satisfied: cycler>=0.10 in /users/bagbodek/.local/lib/python3.9/site-packages (from matplotlib) (0.12.1)
+Requirement already satisfied: fonttools>=4.22.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from matplotlib) (4.58.2)
+Requirement already satisfied: pyparsing>=2.3.1 in /usr/lib/python3.9/site-packages (from matplotlib) (2.4.7)
+Requirement already satisfied: packaging>=20.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from matplotlib) (25.0)
+Requirement already satisfied: pillow>=8 in /users/bagbodek/.local/lib/python3.9/site-packages (from matplotlib) (11.2.1)
+Requirement already satisfied: python-dateutil>=2.7 in /users/bagbodek/.local/lib/python3.9/site-packages (from matplotlib) (2.9.0.post0)
+Requirement already satisfied: kiwisolver>=1.3.1 in /users/bagbodek/.local/lib/python3.9/site-packages (from matplotlib) (1.4.7)
+Requirement already satisfied: numpy>=1.23 in /users/bagbodek/.local/lib/python3.9/site-packages (from matplotlib) (1.26.4)
+Requirement already satisfied: zipp>=3.1.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from importlib-resources>=3.2.0->matplotlib) (3.22.0)
+Requirement already satisfied: six>=1.5 in /usr/lib/python3.9/site-packages (from python-dateutil>=2.7->matplotlib) (1.15.0)
+Defaulting to user installation because normal site-packages is not writeable
+Requirement already satisfied: pandas in /users/bagbodek/.local/lib/python3.9/site-packages (2.3.0)
+Requirement already satisfied: numpy>=1.22.4 in /users/bagbodek/.local/lib/python3.9/site-packages (from pandas) (1.26.4)
+Requirement already satisfied: pytz>=2020.1 in /users/bagbodek/.local/lib/python3.9/site-packages (from pandas) (2025.2)
+Requirement already satisfied: python-dateutil>=2.8.2 in /users/bagbodek/.local/lib/python3.9/site-packages (from pandas) (2.9.0.post0)
+Requirement already satisfied: tzdata>=2022.7 in /users/bagbodek/.local/lib/python3.9/site-packages (from pandas) (2025.2)
+Requirement already satisfied: six>=1.5 in /usr/lib/python3.9/site-packages (from python-dateutil>=2.8.2->pandas) (1.15.0)
+2025-06-10 21:11:51.440645: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:467] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+E0000 00:00:1749604311.459520 2588256 cuda_dnn.cc:8579] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+E0000 00:00:1749604311.465271 2588256 cuda_blas.cc:1407] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+W0000 00:00:1749604311.479960 2588256 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1749604311.479998 2588256 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1749604311.480003 2588256 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1749604311.480011 2588256 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+2025-06-10 21:11:51.484204: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2025-06-10 21:11:58.366180: E external/local_xla/xla/stream_executor/cuda/cuda_platform.cc:51] failed call to cuInit: INTERNAL: CUDA error: Failed call to cuInit: UNKNOWN ERROR (303)
+training_loss = 9.549419997933
+condition_number = 220.96936225196873
+training_loss = 9.549419886481132
+condition_number = 1756.5403138339248
+training_loss = 9.549419813152213
+condition_number = 132.42565866991788
+training_loss = 9.549419887438717
+condition_number = 133.59291013491895
+training_loss = 9.549419813176996
+condition_number = 362.55295772085
+training_loss = 9.54941988647613
+condition_number = 1104.5843046114885
+training_loss = 9.549419813158124
+condition_number = 109.45171806745897
+training_loss = 9.549419813170857
+condition_number = 1502.4306135232198
+training_loss = 9.549419814163002
+condition_number = 176.22263141271782
+training_loss = 9.54941984746688
+condition_number = 171.62085638239967
+-9.549419813152213 True 132.42565866991788 {'.mean_function.A': array([[0.],
+       [1.]]), '.mean_function.b': array([0.]), '.kernel.kernels[0].variance': array(1.82046816), '.kernel.kernels[0].lengthscales': array(7.0868015), '.kernel.kernels[1].variance': array(0.02516842), '.likelihood.variance': array(1.e-05)} [121.07688796]
+
+Time elapsed: 14.25 s

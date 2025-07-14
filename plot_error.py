@@ -86,7 +86,7 @@ def create_shared_yaxis_plots(train_file_1, test_file_1, train_file_2, test_file
     
     # Plot the model with discrepancy correction on the right axis with the legend
     plot_error_bars(ax2, train_file_1, test_file_1, xlabels, width, ylabel=False)
-    ax2.text(-0.35, 155, "(b) GC-GP", fontsize = 14, fontweight = 'bold')
+    ax2.text(-0.35, 155, "(b) GCGP", fontsize = 14, fontweight = 'bold')
     
     # Create and add custom legend
     create_custom_legend(ax2)

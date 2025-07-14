@@ -13,7 +13,7 @@ ANISOTROPY_flag=$(echo "$k" | awk -F'[_]' '{print $4;}')
 
 
 
-cp ../"$PROP_flag"_prediction_data.csv .
+cp ../"$PROP_flag"_prediction_data_fcl.csv .
 cp ../kern_sweep.py  ../kern_sweep_job.sh .
 
 

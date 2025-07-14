@@ -1,5 +1,5 @@
 {'.mean_function.A': array([[0.],
-       [1.]]), '.mean_function.b': array([0.]), '.kernel.kernels[0].variance': array(8.88125674), '.kernel.kernels[0].lengthscales': array(3.04085368), '.kernel.kernels[0].alpha': array(0.21483891), '.kernel.kernels[1].variance': array(0.08231941), '.likelihood.variance': array(1.e-05)}
- Condition Number: 242.6740162360904
+       [1.]]), '.mean_function.b': array([0.]), '.kernel.kernels[0].variance': array(9.56452022), '.kernel.kernels[0].lengthscales': array(3.05037017), '.kernel.kernels[0].alpha': array(0.14218323), '.kernel.kernels[1].variance': array(0.09350609), '.likelihood.variance': array(1.e-05)}
+ Condition Number: 94.26672746782688
  Fit Success?: True
- Log-marginal Likelihood: -121.68712369075286
+ Log-marginal Likelihood: -148.37808086323957

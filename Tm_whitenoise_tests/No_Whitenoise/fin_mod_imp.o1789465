@@ -1,0 +1,289 @@
+Loading python/3.12.8
+  Loading requirement: tcl/8.6.12
+Defaulting to user installation because normal site-packages is not writeable
+Requirement already satisfied: scikit-multilearn in /users/bagbodek/.local/lib/python3.9/site-packages (0.2.0)
+Defaulting to user installation because normal site-packages is not writeable
+Requirement already satisfied: tensorflow in /users/bagbodek/.local/lib/python3.9/site-packages (2.19.0)
+Requirement already satisfied: tensorflow-io-gcs-filesystem>=0.23.1 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow) (0.37.1)
+Requirement already satisfied: libclang>=13.0.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow) (18.1.1)
+Requirement already satisfied: packaging in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow) (25.0)
+Requirement already satisfied: grpcio<2.0,>=1.24.3 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow) (1.71.0)
+Requirement already satisfied: protobuf!=4.21.0,!=4.21.1,!=4.21.2,!=4.21.3,!=4.21.4,!=4.21.5,<6.0.0dev,>=3.20.3 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow) (5.29.5)
+Requirement already satisfied: google-pasta>=0.1.1 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow) (0.2.0)
+Requirement already satisfied: keras>=3.5.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow) (3.10.0)
+Requirement already satisfied: ml-dtypes<1.0.0,>=0.5.1 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow) (0.5.1)
+Requirement already satisfied: requests<3,>=2.21.0 in /usr/lib/python3.9/site-packages (from tensorflow) (2.25.1)
+Requirement already satisfied: wrapt>=1.11.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow) (1.17.2)
+Requirement already satisfied: h5py>=3.11.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow) (3.13.0)
+Requirement already satisfied: opt-einsum>=2.3.2 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow) (3.4.0)
+Requirement already satisfied: flatbuffers>=24.3.25 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow) (25.2.10)
+Requirement already satisfied: tensorboard~=2.19.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow) (2.19.0)
+Requirement already satisfied: typing-extensions>=3.6.6 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow) (4.13.2)
+Requirement already satisfied: gast!=0.5.0,!=0.5.1,!=0.5.2,>=0.2.1 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow) (0.6.0)
+Requirement already satisfied: absl-py>=1.0.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow) (2.3.0)
+Requirement already satisfied: six>=1.12.0 in /usr/lib/python3.9/site-packages (from tensorflow) (1.15.0)
+Requirement already satisfied: astunparse>=1.6.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow) (1.6.3)
+Requirement already satisfied: termcolor>=1.1.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow) (3.1.0)
+Requirement already satisfied: numpy<2.2.0,>=1.26.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow) (1.26.4)
+Requirement already satisfied: setuptools in /usr/lib/python3.9/site-packages (from tensorflow) (53.0.0)
+Requirement already satisfied: wheel<1.0,>=0.23.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from astunparse>=1.6.0->tensorflow) (0.45.1)
+Requirement already satisfied: rich in /users/bagbodek/.local/lib/python3.9/site-packages (from keras>=3.5.0->tensorflow) (14.0.0)
+Requirement already satisfied: namex in /users/bagbodek/.local/lib/python3.9/site-packages (from keras>=3.5.0->tensorflow) (0.1.0)
+Requirement already satisfied: optree in /users/bagbodek/.local/lib/python3.9/site-packages (from keras>=3.5.0->tensorflow) (0.16.0)
+Requirement already satisfied: urllib3<1.27,>=1.21.1 in /usr/lib/python3.9/site-packages (from requests<3,>=2.21.0->tensorflow) (1.26.5)
+Requirement already satisfied: idna<3,>=2.5 in /usr/lib/python3.9/site-packages (from requests<3,>=2.21.0->tensorflow) (2.10)
+Requirement already satisfied: chardet<5,>=3.0.2 in /usr/lib/python3.9/site-packages (from requests<3,>=2.21.0->tensorflow) (4.0.0)
+Requirement already satisfied: markdown>=2.6.8 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorboard~=2.19.0->tensorflow) (3.8)
+Requirement already satisfied: werkzeug>=1.0.1 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorboard~=2.19.0->tensorflow) (3.1.3)
+Requirement already satisfied: tensorboard-data-server<0.8.0,>=0.7.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorboard~=2.19.0->tensorflow) (0.7.2)
+Requirement already satisfied: importlib-metadata>=4.4 in /users/bagbodek/.local/lib/python3.9/site-packages (from markdown>=2.6.8->tensorboard~=2.19.0->tensorflow) (8.7.0)
+Requirement already satisfied: MarkupSafe>=2.1.1 in /users/bagbodek/.local/lib/python3.9/site-packages (from werkzeug>=1.0.1->tensorboard~=2.19.0->tensorflow) (3.0.2)
+Requirement already satisfied: markdown-it-py>=2.2.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from rich->keras>=3.5.0->tensorflow) (3.0.0)
+Requirement already satisfied: pygments<3.0.0,>=2.13.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from rich->keras>=3.5.0->tensorflow) (2.19.1)
+Requirement already satisfied: zipp>=3.20 in /users/bagbodek/.local/lib/python3.9/site-packages (from importlib-metadata>=4.4->markdown>=2.6.8->tensorboard~=2.19.0->tensorflow) (3.22.0)
+Requirement already satisfied: mdurl~=0.1 in /users/bagbodek/.local/lib/python3.9/site-packages (from markdown-it-py>=2.2.0->rich->keras>=3.5.0->tensorflow) (0.1.2)
+Defaulting to user installation because normal site-packages is not writeable
+Requirement already satisfied: gpflow in /users/bagbodek/.local/lib/python3.9/site-packages (2.10.0)
+Requirement already satisfied: tensorflow>=2.4.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from gpflow) (2.19.0)
+Requirement already satisfied: scipy in /users/bagbodek/.local/lib/python3.9/site-packages (from gpflow) (1.13.1)
+Requirement already satisfied: deprecated in /users/bagbodek/.local/lib/python3.9/site-packages (from gpflow) (1.2.18)
+Requirement already satisfied: setuptools>=41.0.0 in /usr/lib/python3.9/site-packages (from gpflow) (53.0.0)
+Requirement already satisfied: numpy<2 in /users/bagbodek/.local/lib/python3.9/site-packages (from gpflow) (1.26.4)
+Requirement already satisfied: tensorflow-probability[tf]>=0.12.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from gpflow) (0.25.0)
+Requirement already satisfied: typing-extensions in /users/bagbodek/.local/lib/python3.9/site-packages (from gpflow) (4.13.2)
+Requirement already satisfied: check-shapes>=1.0.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from gpflow) (1.1.1)
+Requirement already satisfied: packaging in /users/bagbodek/.local/lib/python3.9/site-packages (from gpflow) (25.0)
+Requirement already satisfied: tabulate in /users/bagbodek/.local/lib/python3.9/site-packages (from gpflow) (0.9.0)
+Requirement already satisfied: multipledispatch>=0.6 in /users/bagbodek/.local/lib/python3.9/site-packages (from gpflow) (1.0.0)
+Requirement already satisfied: dropstackframe>=0.1.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from check-shapes>=1.0.0->gpflow) (0.1.0)
+Requirement already satisfied: lark<2.0.0,>=1.1.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from check-shapes>=1.0.0->gpflow) (1.2.2)
+Requirement already satisfied: h5py>=3.11.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow>=2.4.0->gpflow) (3.13.0)
+Requirement already satisfied: tensorflow-io-gcs-filesystem>=0.23.1 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow>=2.4.0->gpflow) (0.37.1)
+Requirement already satisfied: google-pasta>=0.1.1 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow>=2.4.0->gpflow) (0.2.0)
+Requirement already satisfied: ml-dtypes<1.0.0,>=0.5.1 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow>=2.4.0->gpflow) (0.5.1)
+Requirement already satisfied: six>=1.12.0 in /usr/lib/python3.9/site-packages (from tensorflow>=2.4.0->gpflow) (1.15.0)
+Requirement already satisfied: astunparse>=1.6.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow>=2.4.0->gpflow) (1.6.3)
+Requirement already satisfied: termcolor>=1.1.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow>=2.4.0->gpflow) (3.1.0)
+Requirement already satisfied: opt-einsum>=2.3.2 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow>=2.4.0->gpflow) (3.4.0)
+Requirement already satisfied: gast!=0.5.0,!=0.5.1,!=0.5.2,>=0.2.1 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow>=2.4.0->gpflow) (0.6.0)
+Requirement already satisfied: flatbuffers>=24.3.25 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow>=2.4.0->gpflow) (25.2.10)
+Requirement already satisfied: keras>=3.5.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow>=2.4.0->gpflow) (3.10.0)
+Requirement already satisfied: wrapt>=1.11.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow>=2.4.0->gpflow) (1.17.2)
+Requirement already satisfied: grpcio<2.0,>=1.24.3 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow>=2.4.0->gpflow) (1.71.0)
+Requirement already satisfied: libclang>=13.0.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow>=2.4.0->gpflow) (18.1.1)
+Requirement already satisfied: tensorboard~=2.19.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow>=2.4.0->gpflow) (2.19.0)
+Requirement already satisfied: absl-py>=1.0.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow>=2.4.0->gpflow) (2.3.0)
+Requirement already satisfied: requests<3,>=2.21.0 in /usr/lib/python3.9/site-packages (from tensorflow>=2.4.0->gpflow) (2.25.1)
+Requirement already satisfied: protobuf!=4.21.0,!=4.21.1,!=4.21.2,!=4.21.3,!=4.21.4,!=4.21.5,<6.0.0dev,>=3.20.3 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow>=2.4.0->gpflow) (5.29.5)
+Requirement already satisfied: dm-tree in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow-probability[tf]>=0.12.0->gpflow) (0.1.8)
+Requirement already satisfied: decorator in /usr/lib/python3.9/site-packages (from tensorflow-probability[tf]>=0.12.0->gpflow) (4.4.2)
+Requirement already satisfied: cloudpickle>=1.3 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow-probability[tf]>=0.12.0->gpflow) (3.1.1)
+Requirement already satisfied: tf-keras>=2.16 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorflow-probability[tf]>=0.12.0->gpflow) (2.19.0)
+Requirement already satisfied: wheel<1.0,>=0.23.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from astunparse>=1.6.0->tensorflow>=2.4.0->gpflow) (0.45.1)
+Requirement already satisfied: rich in /users/bagbodek/.local/lib/python3.9/site-packages (from keras>=3.5.0->tensorflow>=2.4.0->gpflow) (14.0.0)
+Requirement already satisfied: namex in /users/bagbodek/.local/lib/python3.9/site-packages (from keras>=3.5.0->tensorflow>=2.4.0->gpflow) (0.1.0)
+Requirement already satisfied: optree in /users/bagbodek/.local/lib/python3.9/site-packages (from keras>=3.5.0->tensorflow>=2.4.0->gpflow) (0.16.0)
+Requirement already satisfied: urllib3<1.27,>=1.21.1 in /usr/lib/python3.9/site-packages (from requests<3,>=2.21.0->tensorflow>=2.4.0->gpflow) (1.26.5)
+Requirement already satisfied: chardet<5,>=3.0.2 in /usr/lib/python3.9/site-packages (from requests<3,>=2.21.0->tensorflow>=2.4.0->gpflow) (4.0.0)
+Requirement already satisfied: idna<3,>=2.5 in /usr/lib/python3.9/site-packages (from requests<3,>=2.21.0->tensorflow>=2.4.0->gpflow) (2.10)
+Requirement already satisfied: markdown>=2.6.8 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorboard~=2.19.0->tensorflow>=2.4.0->gpflow) (3.8)
+Requirement already satisfied: tensorboard-data-server<0.8.0,>=0.7.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorboard~=2.19.0->tensorflow>=2.4.0->gpflow) (0.7.2)
+Requirement already satisfied: werkzeug>=1.0.1 in /users/bagbodek/.local/lib/python3.9/site-packages (from tensorboard~=2.19.0->tensorflow>=2.4.0->gpflow) (3.1.3)
+Requirement already satisfied: importlib-metadata>=4.4 in /users/bagbodek/.local/lib/python3.9/site-packages (from markdown>=2.6.8->tensorboard~=2.19.0->tensorflow>=2.4.0->gpflow) (8.7.0)
+Requirement already satisfied: MarkupSafe>=2.1.1 in /users/bagbodek/.local/lib/python3.9/site-packages (from werkzeug>=1.0.1->tensorboard~=2.19.0->tensorflow>=2.4.0->gpflow) (3.0.2)
+Requirement already satisfied: markdown-it-py>=2.2.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from rich->keras>=3.5.0->tensorflow>=2.4.0->gpflow) (3.0.0)
+Requirement already satisfied: pygments<3.0.0,>=2.13.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from rich->keras>=3.5.0->tensorflow>=2.4.0->gpflow) (2.19.1)
+Requirement already satisfied: zipp>=3.20 in /users/bagbodek/.local/lib/python3.9/site-packages (from importlib-metadata>=4.4->markdown>=2.6.8->tensorboard~=2.19.0->tensorflow>=2.4.0->gpflow) (3.22.0)
+Requirement already satisfied: mdurl~=0.1 in /users/bagbodek/.local/lib/python3.9/site-packages (from markdown-it-py>=2.2.0->rich->keras>=3.5.0->tensorflow>=2.4.0->gpflow) (0.1.2)
+Defaulting to user installation because normal site-packages is not writeable
+Requirement already satisfied: scikit-learn in /users/bagbodek/.local/lib/python3.9/site-packages (1.6.1)
+Requirement already satisfied: threadpoolctl>=3.1.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from scikit-learn) (3.6.0)
+Requirement already satisfied: numpy>=1.19.5 in /users/bagbodek/.local/lib/python3.9/site-packages (from scikit-learn) (1.26.4)
+Requirement already satisfied: joblib>=1.2.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from scikit-learn) (1.5.1)
+Requirement already satisfied: scipy>=1.6.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from scikit-learn) (1.13.1)
+Defaulting to user installation because normal site-packages is not writeable
+Requirement already satisfied: scipy in /users/bagbodek/.local/lib/python3.9/site-packages (1.13.1)
+Requirement already satisfied: numpy<2.3,>=1.22.4 in /users/bagbodek/.local/lib/python3.9/site-packages (from scipy) (1.26.4)
+Defaulting to user installation because normal site-packages is not writeable
+Requirement already satisfied: matplotlib in /users/bagbodek/.local/lib/python3.9/site-packages (3.9.4)
+Requirement already satisfied: kiwisolver>=1.3.1 in /users/bagbodek/.local/lib/python3.9/site-packages (from matplotlib) (1.4.7)
+Requirement already satisfied: importlib-resources>=3.2.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from matplotlib) (6.5.2)
+Requirement already satisfied: cycler>=0.10 in /users/bagbodek/.local/lib/python3.9/site-packages (from matplotlib) (0.12.1)
+Requirement already satisfied: python-dateutil>=2.7 in /users/bagbodek/.local/lib/python3.9/site-packages (from matplotlib) (2.9.0.post0)
+Requirement already satisfied: contourpy>=1.0.1 in /users/bagbodek/.local/lib/python3.9/site-packages (from matplotlib) (1.3.0)
+Requirement already satisfied: pillow>=8 in /users/bagbodek/.local/lib/python3.9/site-packages (from matplotlib) (11.2.1)
+Requirement already satisfied: numpy>=1.23 in /users/bagbodek/.local/lib/python3.9/site-packages (from matplotlib) (1.26.4)
+Requirement already satisfied: packaging>=20.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from matplotlib) (25.0)
+Requirement already satisfied: fonttools>=4.22.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from matplotlib) (4.58.2)
+Requirement already satisfied: pyparsing>=2.3.1 in /usr/lib/python3.9/site-packages (from matplotlib) (2.4.7)
+Requirement already satisfied: zipp>=3.1.0 in /users/bagbodek/.local/lib/python3.9/site-packages (from importlib-resources>=3.2.0->matplotlib) (3.22.0)
+Requirement already satisfied: six>=1.5 in /usr/lib/python3.9/site-packages (from python-dateutil>=2.7->matplotlib) (1.15.0)
+Defaulting to user installation because normal site-packages is not writeable
+Requirement already satisfied: pandas in /users/bagbodek/.local/lib/python3.9/site-packages (2.3.0)
+Requirement already satisfied: pytz>=2020.1 in /users/bagbodek/.local/lib/python3.9/site-packages (from pandas) (2025.2)
+Requirement already satisfied: numpy>=1.22.4 in /users/bagbodek/.local/lib/python3.9/site-packages (from pandas) (1.26.4)
+Requirement already satisfied: python-dateutil>=2.8.2 in /users/bagbodek/.local/lib/python3.9/site-packages (from pandas) (2.9.0.post0)
+Requirement already satisfied: tzdata>=2022.7 in /users/bagbodek/.local/lib/python3.9/site-packages (from pandas) (2025.2)
+Requirement already satisfied: six>=1.5 in /usr/lib/python3.9/site-packages (from python-dateutil>=2.8.2->pandas) (1.15.0)
+2025-06-13 20:58:54.094078: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:467] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+E0000 00:00:1749862734.112546 1895677 cuda_dnn.cc:8579] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+E0000 00:00:1749862734.118384 1895677 cuda_blas.cc:1407] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+W0000 00:00:1749862734.132190 1895677 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1749862734.132232 1895677 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1749862734.132237 1895677 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1749862734.132242 1895677 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+2025-06-13 20:58:54.136523: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2025-06-13 20:59:16.544139: E external/local_xla/xla/stream_executor/cuda/cuda_platform.cc:51] failed call to cuInit: INTERNAL: CUDA error: Failed call to cuInit: UNKNOWN ERROR (303)
+2025-06-13 21:05:22.156087: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:05:27.353662: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:05:31.657316: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:05:35.800272: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:05:39.996210: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:05:44.220313: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:05:48.375496: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:05:52.659855: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:05:56.861327: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:06:01.051517: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:06:05.293175: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:06:09.478573: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:06:13.744861: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:06:18.063060: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:06:22.210707: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:06:26.417949: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:06:30.666143: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:06:34.844647: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:06:39.138379: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:06:43.332037: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:06:47.518444: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:06:51.746184: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:06:55.915346: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:07:00.124966: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:07:04.521989: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:07:08.618329: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:07:12.851071: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:07:17.082108: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:07:21.256299: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:07:25.532142: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:07:29.750023: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:07:33.928822: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:07:38.186528: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:07:42.395057: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:07:46.586830: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:07:50.953750: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:12:59.104675: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:13:03.341991: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:13:07.572647: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:13:11.685594: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:13:15.999591: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:13:20.176018: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:13:24.362553: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:13:28.582672: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:13:32.761974: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:13:36.988477: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:13:41.279847: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:13:45.488730: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:13:49.722784: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:13:53.963306: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:13:58.132844: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:14:02.427394: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:14:06.628427: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:14:10.811396: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:14:43.776418: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:14:48.026618: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:14:52.244015: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:14:56.495601: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:15:00.634920: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:15:04.866450: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:15:09.081673: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:15:13.235354: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:15:17.590746: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:15:21.741684: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:15:25.937561: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:15:30.163891: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:15:34.433024: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:15:38.654325: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:15:42.898336: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:15:47.064864: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:15:51.288760: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:15:55.502306: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:15:59.683622: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:16:04.090966: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:16:08.242134: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:16:12.455585: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:16:16.715285: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:16:20.890209: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:16:25.115531: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:16:29.349548: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:16:33.572650: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:16:37.795032: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:16:41.999056: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:16:46.174381: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:16:50.543268: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:16:54.693153: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:16:58.898827: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:17:03.152024: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:17:07.346504: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:17:11.592624: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:29:10.767370: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:29:15.088685: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:29:19.208409: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:29:23.435077: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:29:27.655381: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:29:31.799100: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:29:36.064781: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:29:40.325055: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:29:44.485021: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:29:48.691751: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:29:52.921033: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:29:57.086101: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:30:01.528098: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:30:05.675394: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:30:09.900406: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:30:14.112213: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:30:18.412393: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:30:22.605755: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:31:40.633094: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:34:59.500999: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:35:03.793712: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:35:07.933708: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:35:12.151714: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:35:16.379041: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:35:20.520365: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:35:24.860038: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:35:29.051625: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:35:33.253718: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:35:37.469217: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:35:41.675143: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:35:45.886024: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:35:50.223431: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:35:54.366718: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:35:58.907133: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:36:03.576018: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:36:07.894325: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+2025-06-13 21:36:12.045299: W tensorflow/core/kernels/linalg/cholesky_op.cc:56] Cholesky decomposition was not successful. Eigen::LLT failed with error code 1. Filling lower-triangular output with NaNs.
+training_loss = 4698660.533504876
+condition_number = 8.310793948415973e+65
+training_loss = 4693260.748606543
+condition_number = 2.3343986831592833e+65
+training_loss = 4706595.499775767
+condition_number = 9.188375834477847e+65
+training_loss = 4699611.611253939
+condition_number = 3.148654025663509e+65
+training_loss = 57575636.64833807
+condition_number = 2.1783085160191577e+65
+training_loss = 4699668.802145285
+condition_number = 7.257182562098023e+64
+training_loss = 4698672.6795595065
+condition_number = 1.3759249936131973e+66
+training_loss = 59616171.054811314
+condition_number = 1.932577228631905e+66
+training_loss = 4706432.616638773
+condition_number = 1.4600884478253925e+66
+training_loss = 4699681.857591033
+condition_number = 9.218113762713096e+64
+-4698660.533504876 True 8.310793948415973e+65 {'.mean_function.A': array([[0.],
+       [1.]]), '.mean_function.b': array([0.]), '.kernel.variance': array(15.66531385), '.kernel.lengthscales': array(0.00090752), '.kernel.alpha': array(0.00118093), '.likelihood.variance': array(1.e-05)} [104.7753679]
+
+Time elapsed: 2231.28 s

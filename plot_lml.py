@@ -76,7 +76,7 @@ def create_bar_charts(df, flag_value=False):
         if property == 'Hvap' or property == 'Vc' or property == 'Tm' :
             figsize_width = 5.5
         elif property == 'Tc':
-            figsize_width = 4.3
+            figsize_width = 4.5
         else:
             figsize_width = 3.7
 
@@ -137,7 +137,8 @@ def create_bar_charts(df, flag_value=False):
             ratio = float('inf')  # Infinite ratio if min_LML is zero
 
         # Use a threshold for the ratio to decide whether to use a broken axis
-        ratio_threshold =  6  # You can adjust this threshold as needed
+        ratio_threshold =  20  # You can adjust this threshold as needed
+
 
         if ratio > ratio_threshold:  # Use broken axis when the ratio is large
             fig, (ax1, ax2) = plt.subplots(2, 1, sharex = True, gridspec_kw={'height_ratios': [1, 1]}, figsize = (figsize_length,figsize_width))
@@ -284,11 +285,11 @@ def create_bar_charts(df, flag_value=False):
         ax1.tick_params(axis='y', labelsize=ytick_size)
         ax2.tick_params(axis='y', labelsize=ytick_size)
 
-        ax1.set_ylabel('Log Evidence', fontsize=ytick_size) 
+        ax1.set_ylabel('LML', fontsize=ytick_size) 
         if ax1 != ax2:
             ax1.yaxis.set_label_coords(-0.1, -0.25) 
 
-        #plt.ylabel('Log Evidence', fontsize=ytick_size)
+        #plt.ylabel('LML', fontsize=ytick_size)
         if property == 'Vc':
             plt.xlabel('Model', fontsize=font_size_)
             plt.xticks(index + bar_width * (len(kern_anisotropy) - 1) / 2, models, fontsize=xtick_size)

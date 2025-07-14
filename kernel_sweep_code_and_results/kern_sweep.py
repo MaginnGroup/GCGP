@@ -583,28 +583,47 @@ gpConfig= gpConfig_from_method(method_number, code, kernel, anisotropic, useWhit
 ti=time.time()
 
 # Load data
-db=pd.read_csv(os.path.join(dbPath,code+'_prediction_data.csv'))
+db=pd.read_csv(os.path.join(dbPath,code+'_prediction_data_fcl.csv'))
 db=db.dropna()
 X=db.iloc[:,2:-1].copy().to_numpy('float')
 data_names=db.columns.tolist()[2:]
 Y=db.iloc[:,-1].copy().to_numpy('float')
 Y = Y.reshape(-1,1)
 Y_gc = X[:,-1].reshape(-1,1)
+MW = X[:,-2].reshape(-1,1)
 
-# Stratification based on features
-X_stratify = X[:,0:]
-indices = np.arange(X.shape[0])
-Y_stratify = np.column_stack((indices, Y))
-X_Train_0, Y_Train_0, X_Test_0, Y_Test_0 = \
-                 iterative_train_test_split(X_stratify, Y_stratify, test_size = 0.2)
+# >>>>>>>>>  Stratification based on features <<<<<<<<<<<<<<<<<<<<<<<<<<<<
+# >>>>>>>>>>>>>>>>>>>>>>>>>>  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
+X_data = db.iloc[:,2:-1].copy()
+num_rows_X = X_data.shape[0]  
+y_data_dum = (np.ones((num_rows_X, 2))).astype(int)
+indices = np.arange(X_data.shape[0])
+y_stratify = np.column_stack((indices, y_data_dum))
+X_stratify = X_data.values
 
-# Find the indices for the train and test sets
-train_indices = (Y_Train_0[:,0]).astype(int)
-test_indices = (Y_Test_0[:,0]).astype(int)
+X_ = np.array(y_stratify)
+y_ = np.array(X_stratify)
+y_strat = y_ 
+X_strat = X_ 
+
+seed = 42
+np.random.seed(seed)
+
+X_Train_0, y_Train_0, X_valTest_0, y_valTest_0 = iterative_train_test_split(X_strat, y_strat, test_size = 0.2)
+
+train_indices = (X_Train_0[:,0]).astype(int)
+test_indices = (X_valTest_0[:,0]).astype(int)
+
 
 trn_idx = train_indices
 test_idx = test_indices
+
+X_Train_0 = X[trn_idx, :]
+X_Test_0 = X[test_idx, :]
+Y_Train_0 = Y[trn_idx, :]
+Y_Test_0 = Y[test_idx, :]
+
 
 X_Train, Y_Train, Y_gc_Train = get_gp_data(X_Train_0, Y_Train_0[:,-1], method_number)
 X_Test, Y_Test, Y_gc_Test = get_gp_data(X_Test_0, Y_Test_0[:,-1], method_number)

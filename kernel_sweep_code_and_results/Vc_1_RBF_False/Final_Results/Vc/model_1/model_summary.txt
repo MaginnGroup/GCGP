@@ -1,0 +1,4 @@
+{'.kernel.kernels[0].variance': array(15.02431189), '.kernel.kernels[0].lengthscales': array(3.65855568), '.kernel.kernels[1].variance': array(0.00595701), '.likelihood.variance': array(1.e-05)}
+ Condition Number: 362.99104433437253
+ Fit Success?: True
+ Log-marginal Likelihood: 589.636869181988

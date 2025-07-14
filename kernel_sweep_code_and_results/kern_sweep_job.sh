@@ -19,6 +19,6 @@ pip install pandas
 
 export OMP_NUM_THREADS=${NSLOTS}
 
-python  kern_sweep.py
+/usr/bin/python3.9  kern_sweep.py
 
 cp "model_summary_FILE_INDEX.txt" "/scratch365/bagbodek/GCGP_clone_05_02_2024/GCGP_v01/kernel_sweep/kernel_sweep_all_results/"

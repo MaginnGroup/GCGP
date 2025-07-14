@@ -193,7 +193,7 @@ def parity_plot(code, Y_exp, Y_gp_Pred, Y_gc_Pred, Y_gp_CI, method_number=3, spl
 # Plots generation
 #########################################################################################         
 
-code = 'Hvap'    
+code = 'Pc'    
 method_number_ = 3
 save_plot_ = True
 

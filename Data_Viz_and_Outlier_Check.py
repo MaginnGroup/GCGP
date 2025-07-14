@@ -40,14 +40,14 @@ for i, prop in enumerate(code_list):
         dir_root = f"./Data_Viz_and_Outlier_Figs/{code}/"
         os.makedirs(dir_root, exist_ok=True)
     # Load data
-    db=pd.read_csv(os.path.join(dbPath,code+'_prediction_data.csv'))
+    db=pd.read_csv(os.path.join(dbPath,code+'_prediction_data_fcl.csv'))
     db=db.dropna()
     col_names = db.columns.tolist()[2:]
     X=db.iloc[:,2:-1].copy().to_numpy('float')
     Y_exp=db.iloc[:,-1].copy().to_numpy('float')
-    Y_gc = X[:,-1].reshape(-1,1)
+    Y_gc = (X[:,-1].reshape(-1,1)).flatten()
     Y_disc = X[:,-1]-Y_exp
-    mol_wt = X[:,0].reshape(-1,1)
+    mol_wt = (X[:,0].reshape(-1,1)).flatten()
 
     if code == 'Tm':
         ax_lab = 'T$_m$'
@@ -74,7 +74,7 @@ for i, prop in enumerate(code_list):
     plt.rcParams['figure.dpi'] = 300
 
     fig, ax = plt.subplots()
-    twoD_scatter = ax.scatter(Y_gc, Y_exp, marker='o', edgecolors='blue', facecolors='none', alpha=0.9, \
+    twoD_scatter = ax.scatter(Y_gc, Y_exp, marker='o', facecolors='none', alpha=0.9, \
               c=X[:,0], cmap='viridis', s=100, edgecolor='k')
     plot_perfect_parity(X[:,1], Y_exp, num_std, True)
     plt.yticks(fontsize=20, weight='light')
@@ -187,7 +187,7 @@ def linear_func(x, a1, b1):
 
 def detect_outliers(code, fit_type, num_std, make_plot=True, save_plot=True):
     dbPath=""
-    db=pd.read_csv(os.path.join(dbPath,code+'_prediction_data.csv'))
+    db=pd.read_csv(os.path.join(dbPath,code+'_prediction_data_fcl.csv'))
     db=db.dropna()
     col_names = db.columns.tolist()[2:]
     X=db.iloc[:,2:-1].copy().to_numpy('float')
@@ -242,7 +242,7 @@ def detect_outliers(code, fit_type, num_std, make_plot=True, save_plot=True):
             ax_lab = 'P$_c$'
             units = '/bar'
         elif code == 'Hvap' or code == 'Hvap_orig':
-            ax_lab = '$\Delta$H$_{vap}$'
+            ax_lab = r'$\Delta$H$_{vap}$'
             units = '/kJmol$^{-1}$'
         plt.rcParams['figure.dpi'] = 300
         plt.scatter(X[inlier_index], Y[inlier_index], marker='o', facecolors='none', edgecolors='blue')

@@ -1,4 +1,4 @@
-# Group Contribution Gaussian Process Models for Thermophysical Property Prediction
+# Group Contribution Gaussian Process Hybrid Models for Thermophysical Property Prediction
 
 This repository accompanies the research paper:
 
@@ -11,7 +11,7 @@ This repository accompanies the research paper:
 This repository contains all data, scripts, and results related to the study. Below is a breakdown of the key folders and files:
 
 ### 1. Data Files
-- Curated and preprocessed datasets (`*_fcl.csv`) for all properties.
+- `Data_for_Model_Building` folder containing all curated and preprocessed datasets (`*_fcl.csv`) for model building for all properties.
 - `Hvap_data_test_fluorinated_molecules.csv`: Test set used to evaluate GCGP ΔHvap model performance on highly fluorinated molecules.
 
 ### 2. Final Results
@@ -22,26 +22,29 @@ This repository contains all data, scripts, and results related to the study. Be
   - Model performance metrics
   - Model training outputs
   - Results from different random seeds for train/test splits
+  - Results from different random seeds for train/test splits
+  - `lml_values.csv`: A summary of collected LML values from kernel architecture experiments.
 
 ### 3. Kernel Sweep Experiments
-- Found in `kernel_sweep_code_and_results`.
+- Found in `kernel_sweep_code_and_results` folder.
 - Contains results of testing multiple kernel designs and model architectures as detailed in the paper.
 
-### 4. Data Visualization and Outlier Analysis
-- `Data_Vis_Figs` and `Data_Viz_and_Outlier_Figs` folders include:
+### 4. Data Visualization, Data Quality, and Outlier Analysis
+- `Data_Visualization_Pretraining` and `Data_Quality_and_Outlier_Checks` folders include:
   - Data analysis plots
   - Visualization figures
   - Outlier detection and data quality assessment
 
 ### 5. White Noise Kernel Tests
-- `Tm_whitenoise_tests` contains results analyzing the impact of various white noise kernel settings on normal melting temperature (`Tm`) predictions.
+- `Tm_whitenoise_tests` folder contains results analyzing the impact of various white noise kernel settings on normal melting temperature (`Tm`) predictions.
 
 ### 6. Log-Marginal Likelihood (LML) Analysis
-- `LML_plots`: LML plots for various model and kernel combinations across all properties.
-- `lml_values.csv`: A summary of collected LML values from kernel architecture experiments.
+- `LML_plots` folder contains LML plots for various model and kernel combinations across all properties.
+- - `lml_values.csv` in `Final_Results` folder contains data used in making the plots in `LML_plots` as well as additional data.
+  
 
 ### 7. Python Scripts
-- All Python scripts (`*.py`) used to generate figures, train models, and analyze data are included.
+- `Code.py` folder contains all Python code (`*.py`) used to train models, analyze data, and generate figures.
 - Scripts are descriptively named for easy navigation and use.
 
 ---

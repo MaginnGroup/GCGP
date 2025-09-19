@@ -1,0 +1,211 @@
+========== Job & Machine Info ==========
+Job ID: 2025668
+Job Name: Timing_Tests
+Host: d32cepyc045.crc.nd.edu
+Date: Tue Sep  2 02:38:40 PM EDT 2025
+
+----- CPU Info -----
+Architecture:                         x86_64
+CPU op-mode(s):                       32-bit, 64-bit
+Address sizes:                        48 bits physical, 48 bits virtual
+Byte Order:                           Little Endian
+CPU(s):                               64
+On-line CPU(s) list:                  0-63
+Vendor ID:                            AuthenticAMD
+Model name:                           AMD EPYC 7532 32-Core Processor
+CPU family:                           23
+Model:                                49
+Thread(s) per core:                   1
+Core(s) per socket:                   32
+Socket(s):                            2
+Stepping:                             0
+BogoMIPS:                             4791.22
+Flags:                                fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm constant_tsc rep_good nopl nonstop_tsc cpuid extd_apicid aperfmperf rapl pni pclmulqdq monitor ssse3 fma cx16 sse4_1 sse4_2 movbe popcnt aes xsave avx f16c rdrand lahf_lm cmp_legacy extapic cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw ibs skinit wdt tce topoext perfctr_core perfctr_nb bpext perfctr_llc mwaitx cpb cat_l3 cdp_l3 hw_pstate ssbd mba ibrs ibpb stibp vmmcall fsgsbase bmi1 avx2 smep bmi2 cqm rdt_a rdseed adx smap clflushopt clwb sha_ni xsaveopt xsavec xgetbv1 cqm_llc cqm_occup_llc cqm_mbm_total cqm_mbm_local clzero irperf xsaveerptr rdpru wbnoinvd amd_ppin arat npt lbrv svm_lock nrip_save tsc_scale vmcb_clean flushbyasid decodeassists pausefilter pfthreshold avic v_vmsave_vmload vgif v_spec_ctrl umip rdpid overflow_recov succor smca
+L1d cache:                            2 MiB (64 instances)
+L1i cache:                            2 MiB (64 instances)
+L2 cache:                             32 MiB (64 instances)
+L3 cache:                             512 MiB (32 instances)
+NUMA node(s):                         2
+NUMA node0 CPU(s):                    0-31
+NUMA node1 CPU(s):                    32-63
+Vulnerability Gather data sampling:   Not affected
+Vulnerability Itlb multihit:          Not affected
+Vulnerability L1tf:                   Not affected
+Vulnerability Mds:                    Not affected
+Vulnerability Meltdown:               Not affected
+Vulnerability Mmio stale data:        Not affected
+Vulnerability Reg file data sampling: Not affected
+Vulnerability Retbleed:               Mitigation; untrained return thunk; SMT disabled
+Vulnerability Spec rstack overflow:   Mitigation; SMT disabled
+Vulnerability Spec store bypass:      Mitigation; Speculative Store Bypass disabled via prctl
+Vulnerability Spectre v1:             Mitigation; usercopy/swapgs barriers and __user pointer sanitization
+Vulnerability Spectre v2:             Mitigation; Retpolines; IBPB conditional; STIBP disabled; RSB filling; PBRSB-eIBRS Not affected; BHI Not affected
+Vulnerability Srbds:                  Not affected
+Vulnerability Tsx async abort:        Not affected
+----- Memory Info -----
+               total        used        free      shared  buff/cache   available
+Mem:           250Gi       6.8Gi       137Gi       2.4Gi       110Gi       244Gi
+Swap:             0B          0B          0B
+----- GPU Info -----
+/opt/sge/crc/spool/d32cepyc045/job_scripts/2025668: line 41: nvidia-smi: command not found
+----- Loaded Modules -----
+Currently Loaded Modulefiles:
+ 1) CRC_default/1.1(default)  
+
+Key:
+(symbolic-version)  
+----- Environment Variables -----
+SHELL=/bin/bash
+SGE_RERUN_JOB=0
+SGE_O_SHELL=/bin/bash
+CONDA_EXE=/afs/crc.nd.edu/x86_64_linux/c/conda/24.7.1/bin/conda
+_CE_M=
+HOSTNAME=d32cepyc045.crc.nd.edu
+SGE_O_HOME=/users/bagbodek
+SGE_ROOT=/opt/sge
+JOB_SCRIPT=/opt/sge/crc/spool/d32cepyc045/job_scripts/2025668
+SGE_ACCOUNT=sge
+MAKEFLOW_MAX_LOCAL_JOBS=2
+SGE_RERUN_REQUESTED=0
+SGE_O_LOGNAME=bagbodek
+_LMFILES__modshare=/afs/crc.nd.edu/x86_64_linux/Modules/modules/system_modules/CRC_default/1.1:1
+USE_SYSTEMD=true
+MANPATH_modshare=/common/man:1:/opt/crc/usr/local/man:1
+XML_CATALOG_FILES=file:///afs/crc.nd.edu/x86_64_linux/c/conda/24.7.1/etc/xml/catalog file:///etc/xml/catalog
+PE_HOSTFILE=/opt/sge/crc/spool/d32cepyc045/active_jobs/2025668.1/pe_hostfile
+ENV=/afs/crc.nd.edu/x86_64_linux/Modules/4.7.0/init/profile.sh
+KRB5CCNAME=FILE:/opt/ge-8.8.1/crc/spool/d32cepyc045/active_jobs/2025668.1/token.afs
+PWD=/scratch365/bagbodek/GCGP_clone_05_02_2024/GCGP_v01
+SGE_RSH_COMMAND=builtin
+SGE_LOAD_AVG=load_avg
+LOGNAME=bagbodek
+CONDA_PREFIX=/afs/crc.nd.edu/x86_64_linux/c/conda/24.7.1
+MODULESHOME=/afs/crc.nd.edu/x86_64_linux/Modules/4.7.0
+MANPATH=/opt/sge/man:/afs/crc.nd.edu/x86_64_linux/Modules/4.7.0/share/man:/common/man:/opt/crc/usr/local/man
+SYSTEMD_EXEC_PID=2777
+SGE_STDOUT_PATH=/scratch365/bagbodek/GCGP_clone_05_02_2024/GCGP_v01/timing_tests.log
+NQUEUES=1
+SGE_O_HOST=maginnfe
+HOME=/users/bagbodek
+LANG=en_US.UTF-8
+LD_LIBRARY_PATH_modshare=/common/lib:1:/opt/crc/usr/local/lib:1
+MODULES_LMALTNAME=CRC_default/1.1&CRC_default/default&CRC_default
+SGE_O_WORKDIR=/scratch365/bagbodek/GCGP_clone_05_02_2024/GCGP_v01
+NSLOTS=16
+CONDA_PROMPT_MODIFIER=(base) 
+TMPDIR=/tmp/2025668.1.hpc
+SGE_ARCH=lx-amd64
+SGE_TASK_STEPSIZE=undefined
+JOB_NAME=Timing_Tests
+INVOCATION_ID=1dabb38e62844e18a2c0869e4e388abb
+SGE_CELL=crc
+ARC=lx-amd64
+PATH_modshare=/common/bin:1:/opt/crc/usr/local/bin:1:/tmp/2025668.1.hpc:1:/bin:1:/usr/bin:1:/usr/local/bin:1
+REQUEST=Timing_Tests
+SGE_SUP_GRP_EVAL_RANGE=20045
+SGE_CWD_PATH=/scratch365/bagbodek/GCGP_clone_05_02_2024/GCGP_v01
+MODULEPATH_modshare=/afs/crc.nd.edu/x86_64_linux/Modules/modules/general_software:1:/afs/crc.nd.edu/x86_64_linux/Modules/modules/development_tools_and_libraries:1:/afs/crc.nd.edu/x86_64_linux/Modules/modules/system_modules:1:/afs/crc.nd.edu/x86_64_linux/Modules/current/modulefiles:1:/afs/crc.nd.edu/x86_64_linux/Modules/modules/restricted_software:1:/afs/crc.nd.edu/x86_64_linux/Modules/modules/deprecated_software:1
+MODULES_LMALTNAME_modshare=CRC_default/1.1&CRC_default/default&CRC_default:1
+LOADEDMODULES_modshare=CRC_default/1.1:1
+_CE_CONDA=
+SGE_BINDING=0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15
+SGE_STDERR_PATH=/scratch365/bagbodek/GCGP_clone_05_02_2024/GCGP_v01/timing_tests.log
+LESSOPEN=||/usr/bin/lesspipe.sh %s
+USER=bagbodek
+ENVIRONMENT=BATCH
+CONDA_SHLVL=1
+LOADEDMODULES=CRC_default/1.1
+SHLVL=2
+SGE_TASK_LAST=undefined
+BASH_ENV=/afs/crc.nd.edu/x86_64_linux/Modules/4.7.0/init/bash
+SGE_TASK_FIRST=undefined
+SGE_BINARY_PATH=/opt/sge/bin/lx-amd64
+SGE_STDIN_PATH=/dev/null
+CONDOR_CONFIG=/software/c/condor/condor_config
+PE=smp
+CONDA_PYTHON_EXE=/afs/crc.nd.edu/x86_64_linux/c/conda/24.7.1/bin/python
+LD_LIBRARY_PATH=/common/lib:/opt/crc/usr/local/lib
+SGE_CLUSTER_NAME=CRC
+SGE_SUP_GRP_EVAL=0
+CONDA_DEFAULT_ENV=base
+OMP_NUM_THREADS=16
+NHOSTS=1
+which_declare=declare -f
+REQNAME=Timing_Tests
+SGE_JOB_SPOOL_DIR=/opt/sge/crc/spool/d32cepyc045/active_jobs/2025668.1
+SGE_O_PATH=/afs/crc.nd.edu/x86_64_linux/c/conda/24.7.1/bin:/afs/crc.nd.edu/x86_64_linux/c/conda/24.7.1/condabin:/afs/crc.nd.edu/x86_64_linux/Modules/4.7.0/bin:/common/bin:/opt/crc/usr/local/bin:/opt/sge/bin/lx-amd64:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/software/c/condor/software/versions/x86_64-redhat9/current/bin:/software/c/condor/software/versions/x86_64-redhat9/current/sbin:/users/bagbodek/bin
+JOURNAL_STREAM=8:46316
+XDG_DATA_DIRS=/users/bagbodek/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:/usr/local/share:/usr/share
+TMP=/tmp/2025668.1.hpc
+SGE_TASK_ID=undefined
+PATH=/afs/crc.nd.edu/x86_64_linux/c/conda/24.7.1/bin:/afs/crc.nd.edu/x86_64_linux/c/conda/24.7.1/condabin:/opt/sge/bin/lx-amd64:/afs/crc.nd.edu/x86_64_linux/Modules/4.7.0/bin:/common/bin:/opt/crc/usr/local/bin:/tmp/2025668.1.hpc:/usr/local/bin:/bin:/usr/bin:/software/c/condor/software/versions/x86_64-redhat9/current/bin:/software/c/condor/software/versions/x86_64-redhat9/current/sbin:/users/bagbodek/bin
+SGE_QMASTER_PORT=6444
+MODULEPATH=/afs/crc.nd.edu/x86_64_linux/Modules/modules/development_tools_and_libraries:/afs/crc.nd.edu/x86_64_linux/Modules/modules/general_software:/afs/crc.nd.edu/x86_64_linux/Modules/modules/restricted_software:/afs/crc.nd.edu/x86_64_linux/Modules/modules/system_modules:/afs/crc.nd.edu/x86_64_linux/Modules/modules/deprecated_software:/afs/crc.nd.edu/x86_64_linux/Modules/current/modulefiles
+SGE_O_MAIL=/var/spool/mail/bagbodek
+_LMFILES_=/afs/crc.nd.edu/x86_64_linux/Modules/modules/system_modules/CRC_default/1.1
+JOB_ID=2025668
+AGE_CLUSTER_JOB_TASK_ID=NONE
+RESTARTED=0
+SGE_EXECD_PORT=6445
+QUEUE=hpc
+MODULES_CMD=/afs/crc.nd.edu/x86_64_linux/Modules/4.7.0/libexec/modulecmd.tcl
+BASH_FUNC_ml%%=() {  module ml "$@"
+}
+BASH_FUNC_which%%=() {  ( alias;
+ eval ${which_declare} ) | /usr/bin/which --tty-only --read-alias --read-functions --show-tilde --show-dot $@
+}
+BASH_FUNC_module%%=() {  unset _mlshdbg;
+ if [ "${MODULES_SILENT_SHELL_DEBUG:-0}" = '1' ]; then
+ case "$-" in 
+ *v*x*)
+ set +vx;
+ _mlshdbg='vx'
+ ;;
+ *v*)
+ set +v;
+ _mlshdbg='v'
+ ;;
+ *x*)
+ set +x;
+ _mlshdbg='x'
+ ;;
+ *)
+ _mlshdbg=''
+ ;;
+ esac;
+ fi;
+ unset _mlre _mlIFS;
+ if [ -n "${IFS+x}" ]; then
+ _mlIFS=$IFS;
+ fi;
+ IFS=' ';
+ for _mlv in ${MODULES_RUN_QUARANTINE:-};
+ do
+ if [ "${_mlv}" = "${_mlv##*[!A-Za-z0-9_]}" -a "${_mlv}" = "${_mlv#[0-9]}" ]; then
+ if [ -n "`eval 'echo ${'$_mlv'+x}'`" ]; then
+ _mlre="${_mlre:-}${_mlv}_modquar='`eval 'echo ${'$_mlv'}'`' ";
+ fi;
+ _mlrv="MODULES_RUNENV_${_mlv}";
+ _mlre="${_mlre:-}${_mlv}='`eval 'echo ${'$_mlrv':-}'`' ";
+ fi;
+ done;
+ if [ -n "${_mlre:-}" ]; then
+ eval `eval ${_mlre} /usr/bin/tclsh /afs/crc.nd.edu/x86_64_linux/Modules/4.7.0/libexec/modulecmd.tcl bash '"$@"'`;
+ else
+ eval `/usr/bin/tclsh /afs/crc.nd.edu/x86_64_linux/Modules/4.7.0/libexec/modulecmd.tcl bash "$@"`;
+ fi;
+ _mlstatus=$?;
+ if [ -n "${_mlIFS+x}" ]; then
+ IFS=$_mlIFS;
+ else
+ unset IFS;
+ fi;
+ unset _mlre _mlv _mlrv _mlIFS;
+ if [ -n "${_mlshdbg:-}" ]; then
+ set -$_mlshdbg;
+ fi;
+ unset _mlshdbg;
+ return $_mlstatus
+}
+_=/bin/printenv
+=======================================

@@ -1,0 +1,216 @@
+========== Job & Machine Info ==========
+Job ID: 2025669
+Job Name: Timing_Tests
+Host: d12chas160.crc.nd.edu
+Date: Tue Sep  2 02:40:38 PM EDT 2025
+
+----- CPU Info -----
+Architecture:                         x86_64
+CPU op-mode(s):                       32-bit, 64-bit
+Address sizes:                        46 bits physical, 48 bits virtual
+Byte Order:                           Little Endian
+CPU(s):                               24
+On-line CPU(s) list:                  0-23
+Vendor ID:                            GenuineIntel
+Model name:                           Intel(R) Xeon(R) CPU E5-2680 v3 @ 2.50GHz
+CPU family:                           6
+Model:                                63
+Thread(s) per core:                   1
+Core(s) per socket:                   12
+Socket(s):                            2
+Stepping:                             2
+CPU(s) scaling MHz:                   94%
+CPU max MHz:                          3300.0000
+CPU min MHz:                          1200.0000
+BogoMIPS:                             4999.59
+Flags:                                fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid dca sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm cpuid_fault epb pti intel_ppin ssbd ibrs ibpb stibp fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid cqm xsaveopt cqm_llc cqm_occup_llc dtherm ida arat pln pts md_clear flush_l1d
+L1d cache:                            768 KiB (24 instances)
+L1i cache:                            768 KiB (24 instances)
+L2 cache:                             6 MiB (24 instances)
+L3 cache:                             60 MiB (4 instances)
+NUMA node(s):                         4
+NUMA node0 CPU(s):                    0-5
+NUMA node1 CPU(s):                    6-11
+NUMA node2 CPU(s):                    12-17
+NUMA node3 CPU(s):                    18-23
+Vulnerability Gather data sampling:   Not affected
+Vulnerability Itlb multihit:          KVM: Mitigation: VMX unsupported
+Vulnerability L1tf:                   Mitigation; PTE Inversion
+Vulnerability Mds:                    Mitigation; Clear CPU buffers; SMT disabled
+Vulnerability Meltdown:               Mitigation; PTI
+Vulnerability Mmio stale data:        Mitigation; Clear CPU buffers; SMT disabled
+Vulnerability Reg file data sampling: Not affected
+Vulnerability Retbleed:               Not affected
+Vulnerability Spec rstack overflow:   Not affected
+Vulnerability Spec store bypass:      Mitigation; Speculative Store Bypass disabled via prctl
+Vulnerability Spectre v1:             Mitigation; usercopy/swapgs barriers and __user pointer sanitization
+Vulnerability Spectre v2:             Mitigation; Retpolines; IBPB conditional; IBRS_FW; RSB filling; PBRSB-eIBRS Not affected; BHI Not affected
+Vulnerability Srbds:                  Not affected
+Vulnerability Tsx async abort:        Not affected
+----- Memory Info -----
+               total        used        free      shared  buff/cache   available
+Mem:           250Gi       6.7Gi       147Gi       1.3Gi        99Gi       243Gi
+Swap:             0B          0B          0B
+----- GPU Info -----
+/opt/sge/crc/spool/d12chas160/job_scripts/2025669: line 40: nvidia-smi: command not found
+----- Loaded Modules -----
+Currently Loaded Modulefiles:
+ 1) CRC_default/1.1(default)  
+
+Key:
+(symbolic-version)  
+----- Environment Variables -----
+SHELL=/bin/bash
+SGE_RERUN_JOB=1
+SGE_O_SHELL=/bin/bash
+CONDA_EXE=/afs/crc.nd.edu/x86_64_linux/c/conda/24.7.1/bin/conda
+_CE_M=
+HOSTNAME=d12chas160.crc.nd.edu
+SGE_O_HOME=/users/bagbodek
+SGE_ROOT=/opt/sge
+JOB_SCRIPT=/opt/sge/crc/spool/d12chas160/job_scripts/2025669
+SGE_ACCOUNT=sge
+MAKEFLOW_MAX_LOCAL_JOBS=2
+SGE_RERUN_REQUESTED=0
+SGE_O_LOGNAME=bagbodek
+_LMFILES__modshare=/afs/crc.nd.edu/x86_64_linux/Modules/modules/system_modules/CRC_default/1.1:1
+USE_SYSTEMD=true
+MANPATH_modshare=/common/man:1:/opt/crc/usr/local/man:1
+XML_CATALOG_FILES=file:///afs/crc.nd.edu/x86_64_linux/c/conda/24.7.1/etc/xml/catalog file:///etc/xml/catalog
+PE_HOSTFILE=/opt/sge/crc/spool/d12chas160/active_jobs/2025669.1/pe_hostfile
+ENV=/afs/crc.nd.edu/x86_64_linux/Modules/4.7.0/init/profile.sh
+KRB5CCNAME=FILE:/opt/ge-8.8.1/crc/spool/d12chas160/active_jobs/2025669.1/token.afs
+PWD=/scratch365/bagbodek/GCGP_clone_05_02_2024/GCGP_v01
+SGE_RSH_COMMAND=builtin
+SGE_LOAD_AVG=load_avg
+LOGNAME=bagbodek
+CONDA_PREFIX=/afs/crc.nd.edu/x86_64_linux/c/conda/24.7.1
+MODULESHOME=/afs/crc.nd.edu/x86_64_linux/Modules/4.7.0
+MANPATH=/opt/sge/man:/afs/crc.nd.edu/x86_64_linux/Modules/4.7.0/share/man:/common/man:/opt/crc/usr/local/man
+SYSTEMD_EXEC_PID=81150
+SGE_STDOUT_PATH=/scratch365/bagbodek/GCGP_clone_05_02_2024/GCGP_v01/timing_tests.log
+NQUEUES=1
+SGE_O_HOST=maginnfe
+HOME=/users/bagbodek
+LANG=en_US.UTF-8
+LD_LIBRARY_PATH_modshare=/common/lib:1:/opt/crc/usr/local/lib:1
+MODULES_LMALTNAME=CRC_default/1.1&CRC_default/default&CRC_default
+SGE_O_WORKDIR=/scratch365/bagbodek/GCGP_clone_05_02_2024/GCGP_v01
+NSLOTS=4
+CONDA_PROMPT_MODIFIER=(base) 
+TMPDIR=/tmp/2025669.1.long
+SGE_ARCH=lx-amd64
+SGE_TASK_STEPSIZE=undefined
+JOB_NAME=Timing_Tests
+INVOCATION_ID=19802a7931b34d5ba5c3d20e0d54c5aa
+SGE_CELL=crc
+ARC=lx-amd64
+PATH_modshare=/common/bin:1:/opt/crc/usr/local/bin:1:/bin:1:/usr/bin:1:/tmp/2025669.1.long:1:/usr/local/bin:1
+REQUEST=Timing_Tests
+SGE_SUP_GRP_EVAL_RANGE=20071
+SGE_CWD_PATH=/scratch365/bagbodek/GCGP_clone_05_02_2024/GCGP_v01
+MODULEPATH_modshare=/afs/crc.nd.edu/x86_64_linux/Modules/modules/general_software:1:/afs/crc.nd.edu/x86_64_linux/Modules/modules/development_tools_and_libraries:1:/afs/crc.nd.edu/x86_64_linux/Modules/modules/system_modules:1:/afs/crc.nd.edu/x86_64_linux/Modules/current/modulefiles:1:/afs/crc.nd.edu/x86_64_linux/Modules/modules/restricted_software:1:/afs/crc.nd.edu/x86_64_linux/Modules/modules/deprecated_software:1
+MODULES_LMALTNAME_modshare=CRC_default/1.1&CRC_default/default&CRC_default:1
+LOADEDMODULES_modshare=CRC_default/1.1:1
+_CE_CONDA=
+SGE_BINDING=0 1 2 3
+SGE_STDERR_PATH=/scratch365/bagbodek/GCGP_clone_05_02_2024/GCGP_v01/timing_tests.log
+LESSOPEN=||/usr/bin/lesspipe.sh %s
+USER=bagbodek
+ENVIRONMENT=BATCH
+CONDA_SHLVL=1
+LOADEDMODULES=CRC_default/1.1
+SHLVL=2
+SGE_TASK_LAST=undefined
+BASH_ENV=/afs/crc.nd.edu/x86_64_linux/Modules/4.7.0/init/bash
+SGE_TASK_FIRST=undefined
+SGE_BINARY_PATH=/opt/sge/bin/lx-amd64
+SGE_STDIN_PATH=/dev/null
+CONDOR_CONFIG=/software/c/condor/condor_config
+PE=smp
+CONDA_PYTHON_EXE=/afs/crc.nd.edu/x86_64_linux/c/conda/24.7.1/bin/python
+LD_LIBRARY_PATH=/common/lib:/opt/crc/usr/local/lib
+SGE_CLUSTER_NAME=CRC
+SGE_SUP_GRP_EVAL=0
+CONDA_DEFAULT_ENV=base
+OMP_NUM_THREADS=4
+NHOSTS=1
+which_declare=declare -f
+REQNAME=Timing_Tests
+SGE_JOB_SPOOL_DIR=/opt/sge/crc/spool/d12chas160/active_jobs/2025669.1
+SGE_O_PATH=/afs/crc.nd.edu/x86_64_linux/c/conda/24.7.1/bin:/afs/crc.nd.edu/x86_64_linux/c/conda/24.7.1/condabin:/afs/crc.nd.edu/x86_64_linux/Modules/4.7.0/bin:/common/bin:/opt/crc/usr/local/bin:/opt/sge/bin/lx-amd64:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/software/c/condor/software/versions/x86_64-redhat9/current/bin:/software/c/condor/software/versions/x86_64-redhat9/current/sbin:/users/bagbodek/bin
+JOURNAL_STREAM=8:105255
+XDG_DATA_DIRS=/users/bagbodek/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:/usr/local/share:/usr/share
+TMP=/tmp/2025669.1.long
+SGE_TASK_ID=undefined
+PATH=/afs/crc.nd.edu/x86_64_linux/c/conda/24.7.1/bin:/afs/crc.nd.edu/x86_64_linux/c/conda/24.7.1/condabin:/opt/sge/bin/lx-amd64:/afs/crc.nd.edu/x86_64_linux/Modules/4.7.0/bin:/common/bin:/opt/crc/usr/local/bin:/tmp/2025669.1.long:/usr/local/bin:/bin:/usr/bin:/software/c/condor/software/versions/x86_64-redhat9/current/bin:/software/c/condor/software/versions/x86_64-redhat9/current/sbin:/users/bagbodek/bin
+SGE_QMASTER_PORT=6444
+MODULEPATH=/afs/crc.nd.edu/x86_64_linux/Modules/modules/development_tools_and_libraries:/afs/crc.nd.edu/x86_64_linux/Modules/modules/general_software:/afs/crc.nd.edu/x86_64_linux/Modules/modules/restricted_software:/afs/crc.nd.edu/x86_64_linux/Modules/modules/system_modules:/afs/crc.nd.edu/x86_64_linux/Modules/modules/deprecated_software:/afs/crc.nd.edu/x86_64_linux/Modules/current/modulefiles
+SGE_O_MAIL=/var/spool/mail/bagbodek
+_LMFILES_=/afs/crc.nd.edu/x86_64_linux/Modules/modules/system_modules/CRC_default/1.1
+JOB_ID=2025669
+AGE_CLUSTER_JOB_TASK_ID=NONE
+RESTARTED=0
+SGE_EXECD_PORT=6445
+QUEUE=long
+MODULES_CMD=/afs/crc.nd.edu/x86_64_linux/Modules/4.7.0/libexec/modulecmd.tcl
+BASH_FUNC_ml%%=() {  module ml "$@"
+}
+BASH_FUNC_which%%=() {  ( alias;
+ eval ${which_declare} ) | /usr/bin/which --tty-only --read-alias --read-functions --show-tilde --show-dot $@
+}
+BASH_FUNC_module%%=() {  unset _mlshdbg;
+ if [ "${MODULES_SILENT_SHELL_DEBUG:-0}" = '1' ]; then
+ case "$-" in 
+ *v*x*)
+ set +vx;
+ _mlshdbg='vx'
+ ;;
+ *v*)
+ set +v;
+ _mlshdbg='v'
+ ;;
+ *x*)
+ set +x;
+ _mlshdbg='x'
+ ;;
+ *)
+ _mlshdbg=''
+ ;;
+ esac;
+ fi;
+ unset _mlre _mlIFS;
+ if [ -n "${IFS+x}" ]; then
+ _mlIFS=$IFS;
+ fi;
+ IFS=' ';
+ for _mlv in ${MODULES_RUN_QUARANTINE:-};
+ do
+ if [ "${_mlv}" = "${_mlv##*[!A-Za-z0-9_]}" -a "${_mlv}" = "${_mlv#[0-9]}" ]; then
+ if [ -n "`eval 'echo ${'$_mlv'+x}'`" ]; then
+ _mlre="${_mlre:-}${_mlv}_modquar='`eval 'echo ${'$_mlv'}'`' ";
+ fi;
+ _mlrv="MODULES_RUNENV_${_mlv}";
+ _mlre="${_mlre:-}${_mlv}='`eval 'echo ${'$_mlrv':-}'`' ";
+ fi;
+ done;
+ if [ -n "${_mlre:-}" ]; then
+ eval `eval ${_mlre} /usr/bin/tclsh /afs/crc.nd.edu/x86_64_linux/Modules/4.7.0/libexec/modulecmd.tcl bash '"$@"'`;
+ else
+ eval `/usr/bin/tclsh /afs/crc.nd.edu/x86_64_linux/Modules/4.7.0/libexec/modulecmd.tcl bash "$@"`;
+ fi;
+ _mlstatus=$?;
+ if [ -n "${_mlIFS+x}" ]; then
+ IFS=$_mlIFS;
+ else
+ unset IFS;
+ fi;
+ unset _mlre _mlv _mlrv _mlIFS;
+ if [ -n "${_mlshdbg:-}" ]; then
+ set -$_mlshdbg;
+ fi;
+ unset _mlshdbg;
+ return $_mlstatus
+}
+_=/bin/printenv
+=======================================

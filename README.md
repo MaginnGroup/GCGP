@@ -22,7 +22,7 @@ This repository contains all data, scripts, and results related to the study. Be
   - Model performance metrics
   - Model training outputs
   - Results from different random seeds for train/test splits
-  - Results from different random seeds for train/test splits
+  - Results (numerical data) from timing tests
   - `lml_values.csv`: A summary of collected LML values from kernel architecture experiments.
 
 ### 3. Kernel Sweep Experiments
@@ -44,7 +44,7 @@ This repository contains all data, scripts, and results related to the study. Be
   
 
 ### 7. Python Scripts
-- `Code.py` folder contains all Python code (`*.py`) used to train models, analyze data, and generate figures.
+- `Code.py` folder contains all Python code (`*.py`) used to  analyze data, train models, evaluate model performance, and generate figures.
 - Scripts are descriptively named for easy navigation and use.
 
 ---

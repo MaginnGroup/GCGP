@@ -60,7 +60,11 @@ df = pd.read_csv('lml_values.csv')
 # Function to create bar charts for each property
 # Create a bar chart for each thermophysical property
 def create_bar_charts(df, flag_value=False):
-    selected_colors = ['#b1c800', '#6699ff', '#336699', '#16a085', '#99e6b3', '#ffcc66']
+    #selected_colors = ['#b1c800', '#6699ff', '#336699', '#16a085', '#99e6b3', '#ffcc66']
+    #selected_colors = ['#ff6666', '#6699ff', '#336699', '#16a085', '#99e6b3','#ff0000']
+    #selected_colors = ['#c70039', '#ff5733', '#008080', '#40e0d0', '#4682b4', '#1e90ff']
+    #selected_colors = ['#90ee90', '#d62728', '#6699ff', '#0057b7', '#ff6347' , '#2ca02c']
+    selected_colors = ['#BEBEBE', '#d62728', '#6699ff', '#0057b7', '#ff6347' , 'gray']
 
     hatches = [None, '//', '++', 'oo', '--', 'xx']
     labels = ['(a) ' + '$\Delta H_{' + 'vap' + '}$', 
@@ -73,10 +77,12 @@ def create_bar_charts(df, flag_value=False):
     for property in df['Property'].unique():
 
         figsize_length = 12
-        if property == 'Hvap' or property == 'Vc' or property == 'Tm' :
+        if property == 'Hvap' or property == 'Tm' :
             figsize_width = 5.5
         elif property == 'Tc':
             figsize_width = 4.5
+        elif property == 'Vc':
+            figsize_width = 7.5
         else:
             figsize_width = 3.7
 
@@ -280,18 +286,18 @@ def create_bar_charts(df, flag_value=False):
         # Add labels and title
         xtick_size = 24
         ytick_size = 24
-        font_size_ = 24
+        font_size_ = 36
         label_size_ = 20
         ax1.tick_params(axis='y', labelsize=ytick_size)
         ax2.tick_params(axis='y', labelsize=ytick_size)
 
-        ax1.set_ylabel('LML', fontsize=ytick_size) 
+        ax1.set_ylabel('LML', fontsize=font_size_, fontweight='bold') 
         if ax1 != ax2:
             ax1.yaxis.set_label_coords(-0.1, -0.25) 
 
         #plt.ylabel('LML', fontsize=ytick_size)
         if property == 'Vc':
-            plt.xlabel('Model', fontsize=font_size_)
+            plt.xlabel('Model', fontsize=font_size_, fontweight='bold')
             plt.xticks(index + bar_width * (len(kern_anisotropy) - 1) / 2, models, fontsize=xtick_size)
         else:
             plt.xticks(index + bar_width * (len(kern_anisotropy) - 1) / 2, ['','','',''], fontsize=xtick_size)

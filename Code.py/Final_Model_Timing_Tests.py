@@ -3,75 +3,40 @@
 
 """
 
-
-
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.font_manager import FontProperties
 import pandas as pd
 import re
-import itertools
-from itertools import permutations
 import copy
 from scipy.optimize import curve_fit
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score, mean_absolute_error
+import numpy as np
+import pandas as pd
+from sklearn import metrics
+from sklearn import preprocessing
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import r2_score, mean_absolute_error
+from skmultilearn.model_selection import iterative_train_test_split
+import gpflow
+from gpflow.utilities import print_summary, set_trainable, deepcopy
+import tensorflow as tf
+from tensorflow_probability import bijectors as tfb
+from matplotlib import pyplot as plt
+import random
 import warnings
 import os
+import time
 
 
 
-def print_to_file(info,  mode, file_path):
-    with open(file_path, mode) as file:
-        print(f'' , file=file)
-        print(f'{info}' , file=file)
+# -*- coding: utf-8 -*-
+"""
+Script to train a GP on physicochemical properties.
 
-
-def evaluate(y_true, y_pred, name):
-    r2 = r2_score(y_true, y_pred)
-    mapd = np.mean(np.abs((y_true - y_pred) / y_true)) * 100
-    mae = np.mean(np.abs((y_true - y_pred)))
-    print(f"{name} Set:")
-    print(f"R-squared: {r2:.4f}")
-    print(f"Mean Absolute Percentage Deviation (MAPD): {mapd:.4f}%")
-    print(f"Mean Absolute Error (MAE): {mae:.4f}\n")
-
-    
-def top_dev_points(y_true, y_pred, data_b, type_indices):
-    ae = np.abs(y_true - y_pred)
-    #error_array = np.zeros((len(y_true), 3))
-    #error_array[:, 0] = y_true
-    #error_array[:, 1] = y_pred
-    #error_array[:, 2] = ae
-    data_b_out = data_b.iloc[type_indices, :]
-    data_b_out['GCGP_pred'] = y_pred
-    data_b_out['abs_error'] = ae
-    data_b_sorted = data_b_out.sort_values(by='abs_error', ascending=False, inplace=False)
-    data_b_sorted = data_b_sorted.drop(columns='Mol. wt.', inplace=False)
-    return data_b_sorted
-
-    
-
-def evaluate_output(y_true, y_pred):
-    r2 = r2_score(y_true, y_pred)
-    mapd = np.mean(np.abs((y_true - y_pred) / y_true)) * 100
-    mae = np.mean(np.abs((y_true - y_pred)))
-    mse = np.mean((y_true - y_pred)**2)
-    rmse = np.sqrt(mse)
-    return r2, mapd, mae, rmse
-
-
-def evaluate_print(y_true, y_pred, name, file_path_):
-    r2 = r2_score(y_true, y_pred)
-    mapd = np.mean(np.abs((y_true - y_pred) / y_true)) * 100
-    mae = np.mean(np.abs((y_true - y_pred)))
-    print_to_file(f"{name} Set:" , 'a', file_path_)
-    print_to_file(f"R-squared: {r2:.4f}" , 'a', file_path_)
-    print_to_file(f"Mean Absolute Percentage Deviation (MAPD): {mapd:.4f}%" , 'a', file_path_)
-    print_to_file(f"Mean Absolute Error (MAE): {mae:.4f}\n" , 'a', file_path_)
-
-
-
+Last edit: 2024-09-01
+Contributors: Barnabas Agbodekhe, Montana Carlozo, Dinis Abranches
+"""
 
 
 import os
@@ -379,8 +344,9 @@ def build_model_with_bounded_params(X, Y, Y_gc, kern, low, high, \
     init_val1 = tf.cast(init_val1, dtype=tf.float64)
     init_val2 = tf.cast(init_val2, dtype=tf.float64)
     init_val3 = tf.cast(init_val3, dtype=tf.float64)
+    num_dimensions = X.shape[1]
     if anisotropic == True:
-        lsc = gpflow.Parameter([init_val1, init_val2], transform=tfb.Sigmoid(low , high), dtype=tf.float64)
+        lsc = gpflow.Parameter([init_val1]*num_dimensions, transform=tfb.Sigmoid(low , high), dtype=tf.float64)
     else:
         lsc = gpflow.Parameter(init_val1, transform=tfb.Sigmoid(low , high), dtype=tf.float64)
     alf = gpflow.Parameter(init_val1, transform=tfb.Sigmoid(low , high_alpha), dtype=tf.float64)
@@ -418,8 +384,10 @@ def build_model_with_bounded_params(X, Y, Y_gc, kern, low, high, \
         mf = CustomMeanFunction(X, Y_gc)
     if typeMeanFunc == 'Constant':
         #If constant value is selected but no value is given, default to zero mean
-        mf_val = np.array([0,1]).reshape(-1,1)
-        mf = gpflow.functions.Linear(mf_val)
+        mf_array_ = np.zeros(num_dimensions-2)
+        mf_param = np.concatenate([np.array([0,1]), mf_array_])
+        mf_param = mf_param.reshape(-1,1)
+        mf = gpflow.functions.Linear(mf_param)
     if typeMeanFunc == 'Linear':
         A = np.ones((X.shape[1],1))
         mf = gpflow.functions.Linear(A)
@@ -626,6 +594,14 @@ def count_outside_95(Y_Train, Y_Test, Y_Train_Pred, Y_Test_Pred, Y_Train_CI, Y_T
     
     return num_out95_train, frac_out95_train, num_out95_test, frac_out95_test
     
+def evaluate_output(y_true, y_pred):
+    r2 = r2_score(y_true, y_pred)
+    mapd = np.mean(np.abs((y_true - y_pred) / y_true)) * 100
+    mae = np.mean(np.abs((y_true - y_pred)))
+    mse = np.mean((y_true - y_pred)**2)
+    rmse = np.sqrt(mse)
+    return r2, mapd, mae, rmse
+    
 
 
 # =============================================================================
@@ -639,23 +615,27 @@ def count_outside_95(Y_Train, Y_Test, Y_Train_Pred, Y_Test_Pred, Y_Train_CI, Y_T
 # =============================================================================
 # Configuration
 # =============================================================================
-#Model data is found based on method number
+# Model data is found based on the method number
 
 dbPath=""
 # Property Code
-code='Hvap' # 'Hvap', 'Vc', 'Pc', 'Tc', 'Tb', 'Tm'
+code='Tm_Hfus' # 'Hvap', 'Vc', 'Pc', 'Tc', 'Tb', 'Tm',  'Tm_Hfus'
+
+
 
 featureNorm  = 'Standardization'
 labelNorm = 'Standardization'
 kernel = 'RQ' # Options: RQ, RBF, Matern12, Matern32, Matern52
-anisotropic = False
+anisotropic = True
 opt_method = 'L-BFGS-B' # Options: L-BFGS-B, BFGS
 useWhiteKernel = True
 trainLikelihood = False
-retrain_GP = 10
+retrain_GP = 1
 method_number = 3
 
-seed = 42 #670487 #107473
+num_runs=10
+
+seed = 42 
 np.random.seed(seed)
 
 # GP Configuration
@@ -665,23 +645,31 @@ gpConfig= gpConfig_from_method(method_number, code, kernel, anisotropic, useWhit
 # Main Script
 # =============================================================================
 
-# Initiate timer
-ti=time.time()
+start = 0
+stop = None 
 
 # Load data
 db=pd.read_csv(os.path.join(dbPath,code+'_prediction_data_fcl.csv'))
 db=db.dropna()
-db = db.iloc[0:2500, :]
-X=db.iloc[:,2:-1].copy().to_numpy('float')
-data_names=db.columns.tolist()[2:]
-Y=db.iloc[:,-1].copy().to_numpy('float')
+
+if code == 'Tm_Hfus':
+   X_data = db.iloc[start:stop,[2,3,5]].copy()
+   data_names = db.columns[[2, 3, 5, 6]].tolist()
+else:
+   X_data = db.iloc[start:stop,[2,3]].copy()
+   data_names = db.columns[[2, 3, -1]].tolist()  
+
+
+X=X_data.to_numpy('float')
+Y=db.iloc[start:stop,-1].copy().to_numpy('float')
 Y = Y.reshape(-1,1)
-Y_gc = X[:,-1].reshape(-1,1)
-MW = X[:,-2].reshape(-1,1)
+Y_gc = X[:,1].reshape(-1,1)
+MW = X[:,0].reshape(-1,1)
+
+# >>>>>>>>>  Stratification based on features <<<<<<<<<<<<<<<<<<<<<<<<<<<<
+# >>>>>>>>>>>>>>>>>>>>>>>>>>  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 
-
-X_data = db.iloc[:,2:-1].copy()
 num_rows_X = X_data.shape[0]  
 y_data_dum = (np.ones((num_rows_X, 2))).astype(int)
 indices = np.arange(X_data.shape[0])
@@ -693,14 +681,12 @@ y_ = np.array(X_stratify)
 y_strat = y_ 
 X_strat = X_ 
 
-seed = 42
 np.random.seed(seed)
 
 X_Train_0, y_Train_0, X_valTest_0, y_valTest_0 = iterative_train_test_split(X_strat, y_strat, test_size = 0.2)
 
 train_indices = (X_Train_0[:,0]).astype(int)
 test_indices = (X_valTest_0[:,0]).astype(int)
-
 
 
 trn_idx = train_indices
@@ -749,161 +735,95 @@ if labelNorm is not None:
 else:
     skScaler_Y = None
 
+
+
+##### Timing tests for training the GP model #####
 args = (X_Train_N,Y_Train_N, gpConfig)
-retrain_count = 0
-model, best_min_loss, fit_success, cond_num, trained_hyperparams, model_pretrain, sc_y_scale, mf_method = \
-    train_gp(X_Train_N, Y_Train_N, Y_gc_Train_N, gpConfig, code, skScaler_Y, featureNorm, retrain_GP, retrain_count)
 
-best_lml = -1 * best_min_loss
-best_lml = best_lml.numpy()
-print(best_lml, fit_success, cond_num, trained_hyperparams, sc_y_scale)
+
+training_time_result_array = np.zeros([ num_runs+1 ])
+training_time_result_array[0] = len(X_Train_N)
+for j in range(num_runs):
+    ti_train_start=time.time()
+    
+    retrain_count = 0
+    model, best_min_loss, fit_success, cond_num, trained_hyperparams, model_pretrain, sc_y_scale, mf_method = \
+        train_gp(X_Train_N, Y_Train_N, Y_gc_Train_N, gpConfig, code, skScaler_Y, featureNorm, retrain_GP, retrain_count)
+    
+    tf_train_stop=time.time()
+    train_time_ = tf_train_stop - ti_train_start
+    train_time = "{:.2f}".format(train_time_)
+    training_time_result_array[j+1] = train_time
+    
+training_time_result_df = pd.DataFrame(training_time_result_array)
+training_time_result_df = training_time_result_df.T
+training_time_result_df.columns = ['Training Set Size'] + ['Time (s)'] * num_runs
+print()
+print(training_time_result_df)
 print()
 
-mean_function_values = mf_method(X_Train_N).numpy()  
-mean_X_col2 = skScaler_X.mean_[1]   
-std_X_col2 = skScaler_X.scale_[1]
-mean_function_values_unsc = mean_X_col2 + (mean_function_values * std_X_col2)
-#mean_function_values_unsc = mean_function_values_unsc[0]
-print(mean_function_values_unsc[0:5])
-print()
 
-# Save the model summary to a CSV file
-model_file_name = str(save_path +'/model_summary.txt')
-with open(model_file_name, 'w') as file:
-    val = gpflow.utilities.read_values(model)
-    file.write(str(val))
-    file.write("\n Condition Number: " + str(cond_num))
-    file.write("\n Fit Success?: " + str(fit_success))
-    file.write("\n Log-marginal Likelihood: " + str(best_lml))
-
-# # Get GP predictions
+##### Get GP predictions for Training set #####
 Y_Train_Pred_N,Y_Train_Var_N=gpPredict(model,X_Train_N)
-
-if method_number == 2:
-    model.mean_function.update_Z_test(X_Test_N, Y_gc_Test_N)
-
-Y_Test_Pred_N,Y_Test_Var_N=gpPredict(model,X_Test_N)
-
-# # Unnormalize
 Y_Train_Pred=Y_Train_Pred_N.copy()
-Y_Test_Pred=Y_Test_Pred_N.copy()
 Y_Train_Var=Y_Train_Var_N.copy()
-Y_Test_Var=Y_Test_Var_N.copy()
 if labelNorm != 'None':
     Y_Train_Pred,__=normalize(Y_Train_Pred_N,skScaler=skScaler_Y,
                             method=labelNorm,reverse=True)
-    Y_Test_Pred,__=normalize(Y_Test_Pred_N,skScaler=skScaler_Y,
-                            method=labelNorm,reverse=True)
     Y_Train_Var = (skScaler_Y.scale_**2)*Y_Train_Var
-    Y_Test_Var = (skScaler_Y.scale_**2)*Y_Test_Var
-
-
-Y_Test_Pred_plt = Y_Test_Pred  
-Y_Train_Pred_plt = Y_Train_Pred
-Y_Test_plt = Y_Test 
-Y_Train_plt = Y_Train
-
-Y_Test_CI_plt = 1.96*np.sqrt(Y_Test_Var)
-Y_Train_CI_plt = 1.96*np.sqrt(Y_Train_Var)
-
-count_CI = count_outside_95(Y_Train_plt, Y_Test_plt,
-                 Y_Train_Pred_plt, Y_Test_Pred_plt, 
-                 Y_Train_CI_plt, Y_Test_CI_plt)
-count_CI = np.array(count_CI)
 
 
 
-perf_check_test = evaluate_output(Y_Test_plt, Y_Test_Pred_plt)
-perf_check_train = evaluate_output(Y_Train_plt, Y_Train_Pred_plt)
-print(perf_check_test)
-print()
-print(perf_check_train)
-print()
-print(count_CI)
-print()
-
-
-tf=time.time()
-print('Time elapsed: '+'{:.2f}'.format(tf-ti)+' s')
-
-
-
-hvap_data_fluorinated = pd.read_csv("Hvap_data_test_fluorinated_molecules.csv")    
+##### Timing for making predictions on testing set #####
+if featureNorm is not None:
+    X_Test_N,__=normalize(X_Test,method=featureNorm,skScaler=skScaler_X)
+else:
+    X_Test_N = X_Test
     
-Hvap_OS_X_Test = hvap_data_fluorinated.iloc[:, 0:-1]
-
-Hvap_OS_X_Test_N,__=normalize(Hvap_OS_X_Test,method=featureNorm,skScaler=skScaler_X)
-Hvap_OS_Test_Pred_N,Hvap_OS_Test_Var_N=gpPredict(model,Hvap_OS_X_Test_N)
-
-Hvap_OS_Test_Pred,__=normalize(Hvap_OS_Test_Pred_N,skScaler=skScaler_Y,
-                            method=labelNorm,reverse=True)
-Hvap_OS_Test_Pred_Var = (skScaler_Y.scale_**2)*Hvap_OS_Test_Var_N
-Hvap_OS_Test_CI_plt = 1.96*np.sqrt(Hvap_OS_Test_Pred_Var)
+def gen_test_batches(X_test_all, code):
+    total_xtest = len(X_test_all)
+    if code == 'Hvap':
+        test_batches = [25, 50, 75, total_xtest]
+    elif code in ['Tc', 'Pc', 'Vc']:
+        test_batches = [25, 50, 75, 100, total_xtest]
+    elif code == 'Tb':
+        test_batches = [25, 50, 75, 100, 300, 500, 700, total_xtest]
+    else:
+        test_batches = [25, 50, 75, 100, 300, 500, 700, 900, total_xtest]
+    test_batches = [int(x) for x in test_batches]
+    return test_batches
+        
+def time_testing(code_, num_runs_):
+    test_batch_sizes = gen_test_batches(X_Test_N, code_)
+    testing_res_size = len(test_batch_sizes)
+    testing_result_array = np.zeros([testing_res_size, num_runs_+1])
+    testing_result_array[:,0] = test_batch_sizes
+    for j in range(num_runs_):
+        for i, size in enumerate(test_batch_sizes):
+            start = 0
+            stop = size
+            ti_test_start=time.time()
+            Y_Test_Pred_N,Y_Test_Var_N=gpPredict(model,X_Test_N[start:stop, :])
+            tf_test_stop=time.time()
+            test_time_ = tf_test_stop - ti_test_start
+            test_time = "{:.2f}".format(test_time_)
+            testing_result_array[i, j+1] = test_time
+    test_result_df = pd.DataFrame(testing_result_array)
+    test_result_df.columns = ['Batch Size'] + ['Time (s)'] * num_runs_
+    return test_result_df
     
 
-hvap_data_fluorinated['GCGP Hvap'] = Hvap_OS_Test_Pred
+testing_times = time_testing(code, num_runs)
+print()
+print(testing_times)
+print()
 
 
-Hvap_F_gc = hvap_data_fluorinated.iloc[:, 1]
-Hvap_F_exp = hvap_data_fluorinated.iloc[:, 2]
-Hvap_F_gcgp = hvap_data_fluorinated.iloc[:, 3]
-
-Hvap_F_gcgp_error = Hvap_OS_Test_CI_plt.flatten()
-
-
-Mols = ['$C_{10}F_{18}$', 
-         '$C_{9}F_{20}$', 
-         '$C_{6}F_{14}$', 
-         '$C_{8}HF_{15}O_{2}$', 
-         '$C_{9}HF_{17}O_{2}$']
-
-
-
-x = np.arange(len(Mols))  
-width = 0.25 
-
-
-hatches = ['//', 'oo', None]
-
-
-fig, ax = plt.subplots()
-
-bars1 = ax.bar(x - width/2, Hvap_F_gc, width, label='JR GC', color='red', edgecolor='k', hatch=hatches[0])
-bars2 = ax.bar(x + width/2, Hvap_F_exp, width, label='Exp.', color='gray', edgecolor='k', hatch=hatches[1])
-bars3 = ax.bar(x + 3*width/2, Hvap_F_gcgp, width, label='GCGP', color='blue', yerr=Hvap_F_gcgp_error , capsize=5, edgecolor='k', hatch=hatches[2])
-
-plt.rcParams['font.weight']='bold'
-
-ax.set_ylabel('$\Delta H_{vap}$ kJ/mol', size=14, fontweight='bold')
-ax.set_xticks(x+width/2)
-ax.set_xticklabels(Mols, rotation=15)
-
-
-ax.tick_params(axis='x', labelsize=14)  
-ax.tick_params(axis='y', labelsize=14)  
-
-
-#for label in ax.get_xticklabels() + ax.get_yticklabels():
-#    label.set_fontweight('normal')  
-  
-
-plt.ylim(0, 80)
-#ax.legend(ncol=3, fontsize=14, fontweight='normal', loc='upper center', bbox_to_anchor=(0.5, 1.15))
-
-legend_font = FontProperties(weight='normal', size=14)
-ax.legend(ncol=3, prop=legend_font,
-          loc='upper center', bbox_to_anchor=(0.5, 1.15))
-
-
-
-dir_root = "Final_Results/"
+dir_root = "Final_Results/" + code
 os.makedirs(dir_root, exist_ok=True)
-
-plt.savefig(dir_root+'Hvap_highly_flourinated.png', dpi=500, bbox_inches='tight')
-
-plt.tight_layout
+testing_times.to_csv(dir_root+f"/{code}_prediction_time_tests.csv", index=False)
+training_time_result_df.to_csv(dir_root+f"/{code}_GP_training_time.csv", index=False)
 
 
 
-
-
+  

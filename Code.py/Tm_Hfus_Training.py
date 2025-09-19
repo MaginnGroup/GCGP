@@ -3,82 +3,14 @@
 
 """
 
-
-
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.font_manager import FontProperties
 import pandas as pd
 import re
-import itertools
-from itertools import permutations
 import copy
 from scipy.optimize import curve_fit
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score, mean_absolute_error
-import warnings
-import os
-
-
-
-def print_to_file(info,  mode, file_path):
-    with open(file_path, mode) as file:
-        print(f'' , file=file)
-        print(f'{info}' , file=file)
-
-
-def evaluate(y_true, y_pred, name):
-    r2 = r2_score(y_true, y_pred)
-    mapd = np.mean(np.abs((y_true - y_pred) / y_true)) * 100
-    mae = np.mean(np.abs((y_true - y_pred)))
-    print(f"{name} Set:")
-    print(f"R-squared: {r2:.4f}")
-    print(f"Mean Absolute Percentage Deviation (MAPD): {mapd:.4f}%")
-    print(f"Mean Absolute Error (MAE): {mae:.4f}\n")
-
-    
-def top_dev_points(y_true, y_pred, data_b, type_indices):
-    ae = np.abs(y_true - y_pred)
-    #error_array = np.zeros((len(y_true), 3))
-    #error_array[:, 0] = y_true
-    #error_array[:, 1] = y_pred
-    #error_array[:, 2] = ae
-    data_b_out = data_b.iloc[type_indices, :]
-    data_b_out['GCGP_pred'] = y_pred
-    data_b_out['abs_error'] = ae
-    data_b_sorted = data_b_out.sort_values(by='abs_error', ascending=False, inplace=False)
-    data_b_sorted = data_b_sorted.drop(columns='Mol. wt.', inplace=False)
-    return data_b_sorted
-
-    
-
-def evaluate_output(y_true, y_pred):
-    r2 = r2_score(y_true, y_pred)
-    mapd = np.mean(np.abs((y_true - y_pred) / y_true)) * 100
-    mae = np.mean(np.abs((y_true - y_pred)))
-    mse = np.mean((y_true - y_pred)**2)
-    rmse = np.sqrt(mse)
-    return r2, mapd, mae, rmse
-
-
-def evaluate_print(y_true, y_pred, name, file_path_):
-    r2 = r2_score(y_true, y_pred)
-    mapd = np.mean(np.abs((y_true - y_pred) / y_true)) * 100
-    mae = np.mean(np.abs((y_true - y_pred)))
-    print_to_file(f"{name} Set:" , 'a', file_path_)
-    print_to_file(f"R-squared: {r2:.4f}" , 'a', file_path_)
-    print_to_file(f"Mean Absolute Percentage Deviation (MAPD): {mapd:.4f}%" , 'a', file_path_)
-    print_to_file(f"Mean Absolute Error (MAE): {mae:.4f}\n" , 'a', file_path_)
-
-
-
-
-
-import os
-import warnings
-import time
-
-# Specific
 import numpy as np
 import pandas as pd
 from sklearn import metrics
@@ -91,6 +23,24 @@ from gpflow.utilities import print_summary, set_trainable, deepcopy
 import tensorflow as tf
 from tensorflow_probability import bijectors as tfb
 from matplotlib import pyplot as plt
+import random
+import warnings
+import os
+import time
+
+
+def evaluate_output(y_true, y_pred):
+    r2 = r2_score(y_true, y_pred)
+    mapd = np.mean(np.abs((y_true - y_pred) / y_true)) * 100
+    mae = np.mean(np.abs((y_true - y_pred)))
+    mse = np.mean((y_true - y_pred)**2)
+    rmse = np.sqrt(mse)
+    return r2, mapd, mae, rmse
+
+
+
+Tm_Hfus_prediction_data = pd.read_csv("Tm_Hfus_prediction_data_fcl.csv")
+Tm_Hfus_prediction_data.head()
 
 
 # =============================================================================
@@ -379,8 +329,9 @@ def build_model_with_bounded_params(X, Y, Y_gc, kern, low, high, \
     init_val1 = tf.cast(init_val1, dtype=tf.float64)
     init_val2 = tf.cast(init_val2, dtype=tf.float64)
     init_val3 = tf.cast(init_val3, dtype=tf.float64)
+    num_dimensions = X.shape[1]
     if anisotropic == True:
-        lsc = gpflow.Parameter([init_val1, init_val2], transform=tfb.Sigmoid(low , high), dtype=tf.float64)
+        lsc = gpflow.Parameter([init_val1]*num_dimensions, transform=tfb.Sigmoid(low , high), dtype=tf.float64)
     else:
         lsc = gpflow.Parameter(init_val1, transform=tfb.Sigmoid(low , high), dtype=tf.float64)
     alf = gpflow.Parameter(init_val1, transform=tfb.Sigmoid(low , high_alpha), dtype=tf.float64)
@@ -418,8 +369,10 @@ def build_model_with_bounded_params(X, Y, Y_gc, kern, low, high, \
         mf = CustomMeanFunction(X, Y_gc)
     if typeMeanFunc == 'Constant':
         #If constant value is selected but no value is given, default to zero mean
-        mf_val = np.array([0,1]).reshape(-1,1)
-        mf = gpflow.functions.Linear(mf_val)
+        mf_array_ = np.zeros(num_dimensions-2)
+        mf_param = np.concatenate([np.array([0,1]), mf_array_])
+        mf_param = mf_param.reshape(-1,1)
+        mf = gpflow.functions.Linear(mf_param)
     if typeMeanFunc == 'Linear':
         A = np.ones((X.shape[1],1))
         mf = gpflow.functions.Linear(A)
@@ -626,7 +579,14 @@ def count_outside_95(Y_Train, Y_Test, Y_Train_Pred, Y_Test_Pred, Y_Train_CI, Y_T
     
     return num_out95_train, frac_out95_train, num_out95_test, frac_out95_test
     
-
+def evaluate_output(y_true, y_pred):
+    r2 = r2_score(y_true, y_pred)
+    mapd = np.mean(np.abs((y_true - y_pred) / y_true)) * 100
+    mae = np.mean(np.abs((y_true - y_pred)))
+    mse = np.mean((y_true - y_pred)**2)
+    rmse = np.sqrt(mse)
+    return r2, mapd, mae, rmse
+    
 
 # =============================================================================
 #######################################
@@ -634,16 +594,12 @@ def count_outside_95(Y_Train, Y_Test, Y_Train_Pred, Y_Test_Pred, Y_Train_CI, Y_T
 # GP training and property predictions
 
 #######################################
-# =============================================================================
 
-# =============================================================================
-# Configuration
-# =============================================================================
-#Model data is found based on method number
 
 dbPath=""
 # Property Code
-code='Hvap' # 'Hvap', 'Vc', 'Pc', 'Tc', 'Tb', 'Tm'
+code='Tm_Hfus' # 
+input_id='HfusDivMW_Tm'  #  MW_Tm_HfusDivMW    MW_Tm_Hfus    MW_Tm    Hfus_Tm    HfusDivMW_Tm
 
 featureNorm  = 'Standardization'
 labelNorm = 'Standardization'
@@ -653,9 +609,10 @@ opt_method = 'L-BFGS-B' # Options: L-BFGS-B, BFGS
 useWhiteKernel = True
 trainLikelihood = False
 retrain_GP = 10
-method_number = 3
+method_number = 3 # 1, 3, or 4
 
-seed = 42 #670487 #107473
+
+seed = 42 
 np.random.seed(seed)
 
 # GP Configuration
@@ -668,39 +625,45 @@ gpConfig= gpConfig_from_method(method_number, code, kernel, anisotropic, useWhit
 # Initiate timer
 ti=time.time()
 
+start = 0
+stop = None
+
+
+
 # Load data
 db=pd.read_csv(os.path.join(dbPath,code+'_prediction_data_fcl.csv'))
 db=db.dropna()
-db = db.iloc[0:2500, :]
-X=db.iloc[:,2:-1].copy().to_numpy('float')
-data_names=db.columns.tolist()[2:]
-Y=db.iloc[:,-1].copy().to_numpy('float')
+
+
+if input_id == 'MW_Tm_HfusDivMW':
+   X_data = db.iloc[start:stop,[2,3,5]].copy()
+   data_names = db.columns[[2, 3, 5, 6]].tolist()
+elif input_id == 'MW_Tm_Hfus':
+   X_data = db.iloc[start:stop,[2,3,4]].copy()
+   data_names = db.columns[[2, 3, 4, 6]].tolist()  
+elif input_id == 'MW_Tm':
+   X_data = db.iloc[start:stop,[2,3]].copy()
+   data_names = db.columns[[2, 3, 6]].tolist()
+elif input_id == 'Hfus_Tm':
+   X_data = db.iloc[start:stop,[4,3]].copy()
+   data_names = db.columns[[4, 3, 6]].tolist()   
+elif input_id == 'HfusDivMW_Tm':
+   X_data = db.iloc[start:stop,[5,3]].copy()
+   data_names = db.columns[[5, 3, 6]].tolist()
+
+
+
+X=X_data.to_numpy('float')
+Y=db.iloc[start:stop,-1].copy().to_numpy('float')
 Y = Y.reshape(-1,1)
-Y_gc = X[:,-1].reshape(-1,1)
-MW = X[:,-2].reshape(-1,1)
+Y_gc = X[:,1].reshape(-1,1)
+MW = X[:,0].reshape(-1,1)
 
 
-
-X_data = db.iloc[:,2:-1].copy()
-num_rows_X = X_data.shape[0]  
-y_data_dum = (np.ones((num_rows_X, 2))).astype(int)
-indices = np.arange(X_data.shape[0])
-y_stratify = np.column_stack((indices, y_data_dum))
-X_stratify = X_data.values
-
-X_ = np.array(y_stratify)
-y_ = np.array(X_stratify)
-y_strat = y_ 
-X_strat = X_ 
-
-seed = 42
-np.random.seed(seed)
-
-X_Train_0, y_Train_0, X_valTest_0, y_valTest_0 = iterative_train_test_split(X_strat, y_strat, test_size = 0.2)
-
-train_indices = (X_Train_0[:,0]).astype(int)
-test_indices = (X_valTest_0[:,0]).astype(int)
-
+train_indices = np.loadtxt("Tm_Hfus_train_idx.txt")
+train_indices = train_indices.astype(int)
+test_indices = np.loadtxt("Tm_Hfus_test_idx.txt")
+test_indices = test_indices.astype(int)
 
 
 trn_idx = train_indices
@@ -726,7 +689,7 @@ test_df = pd.DataFrame(test_data, columns = data_names)
 
 
 #Save training and testing data
-save_path = "Final_Results/" + code + "/" + gpConfig['SaveName']
+save_path = "Final_Results/" + code + "/" + gpConfig['SaveName'] + "/" + input_id
 os.makedirs(save_path, exist_ok = True)
 train_df.to_csv(save_path + "/train_data.csv", index= False)
 test_df.to_csv(save_path + "/test_data.csv", index= False)
@@ -759,11 +722,16 @@ best_lml = best_lml.numpy()
 print(best_lml, fit_success, cond_num, trained_hyperparams, sc_y_scale)
 print()
 
-mean_function_values = mf_method(X_Train_N).numpy()  
+
+if mf_method is not None:
+    mean_function_values = mf_method(X_Train_N).numpy()
+else:
+    mean_function_values = np.zeros((len(X_Train_N), 1))
+
+
 mean_X_col2 = skScaler_X.mean_[1]   
 std_X_col2 = skScaler_X.scale_[1]
 mean_function_values_unsc = mean_X_col2 + (mean_function_values * std_X_col2)
-#mean_function_values_unsc = mean_function_values_unsc[0]
 print(mean_function_values_unsc[0:5])
 print()
 
@@ -813,97 +781,37 @@ count_CI = np.array(count_CI)
 
 
 
+dir_root = save_path
+os.makedirs(dir_root, exist_ok=True)
+
+np.savetxt(dir_root+f"/{code}_count_CI.txt", count_CI)
+np.savetxt(dir_root+f"/{code}_train_indices.txt", trn_idx)
+np.savetxt(dir_root+f"/{code}_test_indices.txt", test_idx)
+np.savetxt(dir_root+f"/{code}_Y_train_true.txt", Y_Train_plt)
+np.savetxt(dir_root+f"/{code}_Y_test_true.txt", Y_Test_plt)
+np.savetxt(dir_root+f"/{code}_Y_train_pred.txt", Y_Train_Pred_plt)
+np.savetxt(dir_root+f"/{code}_Y_test_pred.txt", Y_Test_Pred_plt)
+
+np.savetxt(dir_root+f"/{code}_Y_gc_train.txt", Y_gc_Train)
+np.savetxt(dir_root+f"/{code}_Y_gc_test.txt", Y_gc_Test)
+
+np.savetxt(dir_root+f"/{code}_Y_train_pred_95CI.txt", Y_Train_CI_plt)
+np.savetxt(dir_root+f"/{code}_Y_test_pred_95CI.txt", Y_Test_CI_plt)
+
+
+
 perf_check_test = evaluate_output(Y_Test_plt, Y_Test_Pred_plt)
+perf_check_test = np.array([perf_check_test]).flatten()
 perf_check_train = evaluate_output(Y_Train_plt, Y_Train_Pred_plt)
-print(perf_check_test)
-print()
-print(perf_check_train)
-print()
-print(count_CI)
-print()
+perf_check_train = np.array([perf_check_train]).flatten()
+
+np.savetxt(dir_root+f"/{code}_Y_train_pred_metrics.txt", perf_check_train)
+np.savetxt(dir_root+f"/{code}_Y_test_pred_metrics.txt", perf_check_test)
+
 
 
 tf=time.time()
 print('Time elapsed: '+'{:.2f}'.format(tf-ti)+' s')
 
-
-
-hvap_data_fluorinated = pd.read_csv("Hvap_data_test_fluorinated_molecules.csv")    
     
-Hvap_OS_X_Test = hvap_data_fluorinated.iloc[:, 0:-1]
-
-Hvap_OS_X_Test_N,__=normalize(Hvap_OS_X_Test,method=featureNorm,skScaler=skScaler_X)
-Hvap_OS_Test_Pred_N,Hvap_OS_Test_Var_N=gpPredict(model,Hvap_OS_X_Test_N)
-
-Hvap_OS_Test_Pred,__=normalize(Hvap_OS_Test_Pred_N,skScaler=skScaler_Y,
-                            method=labelNorm,reverse=True)
-Hvap_OS_Test_Pred_Var = (skScaler_Y.scale_**2)*Hvap_OS_Test_Var_N
-Hvap_OS_Test_CI_plt = 1.96*np.sqrt(Hvap_OS_Test_Pred_Var)
     
-
-hvap_data_fluorinated['GCGP Hvap'] = Hvap_OS_Test_Pred
-
-
-Hvap_F_gc = hvap_data_fluorinated.iloc[:, 1]
-Hvap_F_exp = hvap_data_fluorinated.iloc[:, 2]
-Hvap_F_gcgp = hvap_data_fluorinated.iloc[:, 3]
-
-Hvap_F_gcgp_error = Hvap_OS_Test_CI_plt.flatten()
-
-
-Mols = ['$C_{10}F_{18}$', 
-         '$C_{9}F_{20}$', 
-         '$C_{6}F_{14}$', 
-         '$C_{8}HF_{15}O_{2}$', 
-         '$C_{9}HF_{17}O_{2}$']
-
-
-
-x = np.arange(len(Mols))  
-width = 0.25 
-
-
-hatches = ['//', 'oo', None]
-
-
-fig, ax = plt.subplots()
-
-bars1 = ax.bar(x - width/2, Hvap_F_gc, width, label='JR GC', color='red', edgecolor='k', hatch=hatches[0])
-bars2 = ax.bar(x + width/2, Hvap_F_exp, width, label='Exp.', color='gray', edgecolor='k', hatch=hatches[1])
-bars3 = ax.bar(x + 3*width/2, Hvap_F_gcgp, width, label='GCGP', color='blue', yerr=Hvap_F_gcgp_error , capsize=5, edgecolor='k', hatch=hatches[2])
-
-plt.rcParams['font.weight']='bold'
-
-ax.set_ylabel('$\Delta H_{vap}$ kJ/mol', size=14, fontweight='bold')
-ax.set_xticks(x+width/2)
-ax.set_xticklabels(Mols, rotation=15)
-
-
-ax.tick_params(axis='x', labelsize=14)  
-ax.tick_params(axis='y', labelsize=14)  
-
-
-#for label in ax.get_xticklabels() + ax.get_yticklabels():
-#    label.set_fontweight('normal')  
-  
-
-plt.ylim(0, 80)
-#ax.legend(ncol=3, fontsize=14, fontweight='normal', loc='upper center', bbox_to_anchor=(0.5, 1.15))
-
-legend_font = FontProperties(weight='normal', size=14)
-ax.legend(ncol=3, prop=legend_font,
-          loc='upper center', bbox_to_anchor=(0.5, 1.15))
-
-
-
-dir_root = "Final_Results/"
-os.makedirs(dir_root, exist_ok=True)
-
-plt.savefig(dir_root+'Hvap_highly_flourinated.png', dpi=500, bbox_inches='tight')
-
-plt.tight_layout
-
-
-
-
-

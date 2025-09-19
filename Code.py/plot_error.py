@@ -15,18 +15,52 @@ import global_plot_settings as rcParams
 # Set global plot settings
 rcParams.set_plot_settings()
 
+plt.rcParams['axes.labelsize']=14
+plt.rcParams['xtick.labelsize']=14
+plt.rcParams['ytick.labelsize']=14
+
+ # Pyplot Configuration
+#plt.rcParams['figure.dpi']=300
+#plt.rcParams['savefig.dpi']=300
+##plt.rcParams['text.usetex']=False
+##plt.rcParams['font.family']='serif'
+## plt.rcParams['font.serif']='Times New Roman'
+#plt.rcParams['font.weight']='bold'
+##plt.rcParams['mathtext.rm']='serif'
+##plt.rcParams['mathtext.it']='serif:italic'
+##plt.rcParams['mathtext.bf']='serif:bold'
+##plt.rcParams['mathtext.fontset']='custom'
+#plt.rcParams['axes.titlesize']=9
+#plt.rcParams['axes.labelsize']=9
+#plt.rcParams['xtick.labelsize']=9
+#plt.rcParams['ytick.labelsize']=9
+#plt.rcParams['font.size']=8.5
+#plt.rcParams["savefig.pad_inches"]=0.02
+
+
+
 # Define custom colors
 mysalmon = (235/255, 134/255, 100/255)
 myteal   = (103/255, 185/255, 155/255)
 
 # Define labels for the x-axis
+#xlabels = [
+#    '$\Delta H_{vap}$' + '\n[kJ $\cdot$' + ' mol' + '$^{-1}$' + ']',
+#    '$P_c$' + ' [bar]',
+#    '$T_b$' + ' [K]',
+#    '$T_c$' + ' [K]',
+#    '$T_m$' + ' [K]',
+#    '$V_c$' + '\n [cm' + '$^{3}$' + '$\cdot$' + ' mol' + '$^{-1}$' + ']'
+#]
+
+
 xlabels = [
-    '$\Delta H_{vap}$' + '\n[kJ $\cdot$' + ' mol' + '$^{-1}$' + ']',
-    '$P_c$' + ' [bar]',
-    '$T_b$' + ' [K]',
-    '$T_c$' + ' [K]',
-    '$T_m$' + ' [K]',
-    '$V_c$' + '\n [cm' + '$^{3}$' + '$\cdot$' + ' mol' + '$^{-1}$' + ']'
+    "$\Delta$H$_{vap}$ \n/kJmol$^{-1}$",
+    'P$_{c}$ /bar',
+    'T$_{b}$ /K',
+    'T$_{c}$ /K',
+    'T$_{m}$ /K',
+    'V$_{c}$ \n/cm$^3$mol$^{-1}$'
 ]
 
 def plot_error_bars(ax, train_file, test_file, xlabels, width=0.2, ylabel=True):
@@ -39,18 +73,19 @@ def plot_error_bars(ax, train_file, test_file, xlabels, width=0.2, ylabel=True):
     x = np.arange(no_cats)
     
     # Plot MAE bars
-    bars1 = ax.bar(x - 1.5*width, train.loc['MAE'], width, color=mysalmon, edgecolor='k')
-    bars2 = ax.bar(x - width/2, test.loc['MAE'], width, color=mysalmon, edgecolor='k', hatch='//')
+    #bars1 = ax.bar(x - 1.5*width, train.loc['MAE'], width, color='#0057b7', edgecolor='k')
+    bars1 = ax.bar(x - 1.5*width, train.loc['MAE'], width, color='#6699ff', edgecolor='k')
+    bars2 = ax.bar(x - width/2, test.loc['MAE'], width, color='#6699ff', edgecolor='k', hatch='//')
     
     # Plot RMSE bars
-    bars3 = ax.bar(x + width/2, train.loc['RMSE'], width, color=myteal, edgecolor='k')
-    bars4 = ax.bar(x + 1.5*width, test.loc['RMSE'], width, color=myteal, edgecolor='k', hatch='//')
+    bars3 = ax.bar(x + width/2, train.loc['RMSE'], width, color='red', edgecolor='k')
+    bars4 = ax.bar(x + 1.5*width, test.loc['RMSE'], width, color='red', edgecolor='k', hatch='//')
     
     # Add error values on top of bars with rotation and consistent formatting
     for bars in [bars1, bars2, bars3, bars4]:
         for bar in bars:
             yval = bar.get_height()
-            ax.text(bar.get_x() + bar.get_width()/2, yval + 3, "{:.3f}".format(yval), 
+            ax.text(bar.get_x() + bar.get_width()/2, yval + 3, "{:.2f}".format(yval), 
                     ha='center', va='bottom', fontsize=9, rotation=90)
     
     # Set labels and titles
@@ -67,8 +102,8 @@ def create_custom_legend(ax):
     """Creates a custom legend for the plot."""
     # Custom legend handles
     legend_patches = [
-        mpatches.Patch(color=mysalmon, label='MAE'),
-        mpatches.Patch(color=myteal, label='RMSE'),
+        mpatches.Patch(color='#6699ff', label='MAE'),
+        mpatches.Patch(color='red', label='RMSE'),
         mpatches.Patch(facecolor='white', edgecolor='black', hatch='//', label='Test'),
         mpatches.Patch(facecolor='white', edgecolor='black', label='Train')
     ]
@@ -82,7 +117,7 @@ def create_shared_yaxis_plots(train_file_1, test_file_1, train_file_2, test_file
     
     # Plot the Joback model results on the left axis with legend
     plot_error_bars(ax1, train_file_2, test_file_2, xlabels, width)
-    ax1.text(-0.35, 155, "(a) JR", fontsize = 14, fontweight = 'bold')
+    ax1.text(-0.35, 155, "(a) JR GC", fontsize = 14, fontweight = 'bold')
     
     # Plot the model with discrepancy correction on the right axis with the legend
     plot_error_bars(ax2, train_file_1, test_file_1, xlabels, width, ylabel=False)
@@ -105,3 +140,8 @@ create_shared_yaxis_plots(
     xlabels=xlabels,
     output_file=os.path.join('Final_Results', 'error_bar_chart_shared_yaxis')
 )
+
+
+
+
+
